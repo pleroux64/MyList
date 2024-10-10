@@ -1,0 +1,62 @@
+# Environment files
+.env
+*.env
+
+# Python bytecode and caches (Django specific)
+server/__pycache__/
+server/*.py[cod]
+server/*$py.class
+
+# Django specific files
+server/*.log
+server/db.sqlite3
+server/media/
+server/staticfiles/
+server/local_settings.py
+
+# Virtual environment directory in the root
+venv/
+env/
+.virtualenv/
+
+# Node.js specific files (React)
+client/node_modules/
+client/npm-debug.log
+client/yarn-error.log
+client/.yarn-integrity
+client/pnp.*
+client/.pnp/
+
+# React build files
+client/build/
+client/dist/
+
+# macOS specific files
+.DS_Store
+
+# IDE/Editor specific files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# General backup files
+*.bak
+*.swp
+*~
+
+# Thumbnails and other OS-generated files
+Thumbs.db
+
+# Coverage reports (for testing)
+coverage/
+*.cover
+.hypothesis/
+*.coveragerc
+
+# Django migrations (optional)
+server/**/migrations/*
+
+# Django static and media files (generated in production)
+server/static/
+server/media/
