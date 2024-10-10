@@ -1,0 +1,42 @@
+# Python bytecode files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment directories (if inside server)
+env/
+venv/
+.virtualenv/
+
+# Django specific files
+db.sqlite3
+*.log
+media/
+staticfiles/
+local_settings.py
+
+# Migrations (optional)
+**/migrations/*
+
+# Environment variables
+.env
+
+# Pytest cache
+.pytest_cache/
+
+# Coverage reports
+htmlcov/
+.tox/
+.coverage
+*.cover
+.hypothesis/
+
+# IDE/Editor specific files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# System specific files
+.DS_Store
+Thumbs.db
