@@ -15,9 +15,16 @@ function Login() {
         username,
         password,
       });
-      // Assuming login is successful, save the tokens and redirect
+
+      // Assuming login is successful, save the tokens and update local storage
       localStorage.setItem('accessToken', response.data.access);
       localStorage.setItem('refreshToken', response.data.refresh);
+
+      // Set the username in localStorage to update the display in the Layout
+      localStorage.setItem('username', username);
+
+      // Trigger a page update by setting the isAuthenticated state in other components
+      window.dispatchEvent(new Event('storage'));
 
       // Redirect to the home page
       navigate('/');

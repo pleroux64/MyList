@@ -1,5 +1,5 @@
 // src/AuthContext.js
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 
 const AuthContext = createContext();
@@ -15,7 +15,7 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  const fetchUserInfo = async (token) => {
+  const fetchUserInfo = useCallback(async (token) => {
     try {
       const response = await axios.get('http://127.0.0.1:8000/api/media/user-info/', {
         headers: {
@@ -23,24 +23,29 @@ export const AuthProvider = ({ children }) => {
         },
       });
       setUsername(response.data.username);
-      localStorage.setItem('username', response.data.username); // Store username in localStorage
+      localStorage.setItem('username', response.data.username);
     } catch (error) {
       console.error('Error fetching user info:', error);
       setUsername('');
     }
-  };
+  }, []);
 
-  const handleLogin = (token) => {
+  const handleLogin = async (token) => {
     localStorage.setItem('accessToken', token);
     setIsAuthenticated(true);
-    fetchUserInfo(token); // Fetch username when the user logs in
+
+    try {
+      await fetchUserInfo(token); // Ensure username and state are updated after login
+    } catch (error) {
+      console.error('Error fetching user info during login:', error);
+    }
   };
 
   const handleLogout = () => {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('username');
     setIsAuthenticated(false);
-    setUsername(''); // Immediately update the UI to reflect the logged-out state
+    setUsername(''); // Update the state to reflect the logged-out state
   };
 
   return (
