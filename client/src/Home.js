@@ -69,12 +69,11 @@ function Home() {
         console.error('Error saving interaction:', error.response ? error.response.data : error.message);
         alert(`Failed to save interaction: ${error.response ? error.response.data : error.message}`);
     }
-};
-
+  };
 
   return (
     <div>
-      <h1>Welcome to the Home Page!</h1>
+      <h1>Welcome to MyList!</h1>
       {isAuthenticated ? (
         <div>
           <p>You are logged in.</p>
@@ -89,6 +88,10 @@ function Home() {
           <button onClick={handleLogin}>Login</button>
         </div>
       )}
+
+      <div>
+        <Link to="/top-media-lists">View Top Media Lists</Link> {/* Link to the Top Media Lists page */}
+      </div>
 
       {/* Search Bar Section */}
       <div>
