@@ -10,7 +10,6 @@ function Layout({ children, isAuthenticated, username, handleLogout }) {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Ensure the dropdown is closed when the authentication state changes
   useEffect(() => {
     setShowDropdown(false);
   }, [isAuthenticated]);
@@ -20,15 +19,34 @@ function Layout({ children, isAuthenticated, username, handleLogout }) {
   };
 
   const handleSearch = async () => {
+    if (searchTerm.trim() === '') {
+      setSearchResults([]);
+      setShowDropdown(false);
+      return;
+    }
+
     setLoading(true);
     try {
       const response = await axios.get(`http://127.0.0.1:8000/api/media/search/?q=${searchTerm}`);
       setSearchResults(response.data);
+      setShowDropdown(true);
     } catch (error) {
       console.error('Error searching media:', error);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleSearchInputChange = (e) => {
+    setSearchTerm(e.target.value);
+    handleSearch();
+  };
+
+  const handleResultClick = (media) => {
+    setSearchTerm('');
+    setSearchResults([]);
+    setShowDropdown(false);
+    navigate(`/media/${media.id}`);
   };
 
   return (
@@ -63,28 +81,36 @@ function Layout({ children, isAuthenticated, username, handleLogout }) {
           <input
             type="text"
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={handleSearchInputChange}
             placeholder="Search for media..."
+            onFocus={() => setShowDropdown(searchResults.length > 0)}
           />
           <button onClick={handleSearch}>Search</button>
+
+          {/* Dropdown for search results */}
+          {showDropdown && searchResults.length > 0 && (
+            <ul className="search-dropdown">
+              {loading ? (
+                <li>Loading...</li>
+              ) : (
+                searchResults.map((media) => (
+                  <li key={media.id} onClick={() => handleResultClick(media)}>
+                    <img
+                      src={media.image_url || 'default-placeholder-image-url.jpg'}
+                      alt={media.title}
+                      style={{ width: '30px', height: '45px', marginRight: '10px' }}
+                    />
+                    <span>{media.title} - {media.media_type}</span>
+                  </li>
+                ))
+              )}
+            </ul>
+          )}
         </div>
       </header>
 
       <main className="content">
         {children}
-
-        {/* Display search results below the main content */}
-        {loading ? (
-          <p>Loading search results...</p>
-        ) : (
-          <ul className="search-results">
-            {searchResults.map((media) => (
-              <li key={media.id}>
-                <strong>{media.title}</strong> - {media.media_type} - Rating: {media.rating}
-              </li>
-            ))}
-          </ul>
-        )}
       </main>
 
       <footer className="footer">

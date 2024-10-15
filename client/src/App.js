@@ -5,6 +5,7 @@ import Login from './Login';
 import Home from './Home';
 import MediaList from './MediaList';
 import TopMediaListsPage from './TopMediaListsPage';
+import MediaDetailsPage from './MediaDetailsPage'; // Import the Media Details page
 import Layout from './Layout';
 
 function App() {
@@ -52,6 +53,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/media-list" element={<MediaList />} />
           <Route path="/top-media-lists" element={<TopMediaListsPage />} />
+          <Route path="/media/:mediaId" element={<MediaDetailsPage />} /> {/* New route for media details */}
         </Routes>
       </Layout>
     </Router>

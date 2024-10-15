@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 function TopMediaListsPage() {
@@ -6,17 +7,18 @@ function TopMediaListsPage() {
     const [topMediaList, setTopMediaList] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const navigate = useNavigate(); // For navigation
 
     useEffect(() => {
         fetchTopMediaListByType(mediaType); // Fetch the top media list whenever the media type changes
     }, [mediaType]);
 
-    // Function to fetch top media list by type
     const fetchTopMediaListByType = async (type) => {
         setLoading(true);
         setError(null);
 
         try {
+            // Fetch the top media list from your database for the selected media type
             const response = await axios.get(`http://127.0.0.1:8000/api/media/top-media/${type}/`);
             setTopMediaList(response.data);
         } catch (error) {
@@ -50,8 +52,19 @@ function TopMediaListsPage() {
             {topMediaList.length > 0 ? (
                 <ul>
                     {topMediaList.map((media) => (
-                        <li key={media.id}>
-                            <strong>{media.title}</strong> - Average Rating: {media.average_rating}/10
+                        <li
+                            key={media.id}
+                            style={{ display: 'flex', alignItems: 'center', margin: '10px 0', cursor: 'pointer' }}
+                            onClick={() => navigate(`/media/${media.id}`)} // Navigate to media details page
+                        >
+                            <img
+                                src={media.image_url || 'default-placeholder-image-url.jpg'}
+                                alt={media.title}
+                                style={{ width: '100px', height: '150px', marginRight: '15px' }}
+                            />
+                            <div>
+                                <strong>{media.title}</strong> - Average Rating: {media.average_rating || 'Not Yet Rated'}
+                            </div>
                         </li>
                     ))}
                 </ul>

@@ -1,37 +1,38 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 function MediaList() {
-    const [mediaType, setMediaType] = useState('movie'); // Default to 'movie' initially
+    const [mediaType, setMediaType] = useState('movie');
     const [mediaList, setMediaList] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const navigate = useNavigate(); // For navigation
 
     useEffect(() => {
-        fetchMediaListByType(mediaType); // Fetch the media list whenever the media type changes
+        fetchMediaListByType(mediaType);
     }, [mediaType]);
 
-    // Function to fetch media list by type
     const fetchMediaListByType = async (type) => {
         setLoading(true);
         setError(null);
-    
-        const token = localStorage.getItem('accessToken'); // Retrieve the token from local storage
-    
+
+        const token = localStorage.getItem('accessToken');
+
         if (!token) {
             setError('No access token found. Please log in again.');
             setLoading(false);
             return;
         }
-    
+
         try {
             const response = await axios.get(`http://127.0.0.1:8000/api/media/user-media-list/`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
-                params: { media_type: type }, // Add media type as a query parameter
+                params: { media_type: type },
             });
-            setMediaList(response.data); // Store the data in state
+            setMediaList(response.data);
         } catch (error) {
             console.error('Error fetching media list:', error);
             if (error.response && error.response.status === 401) {
@@ -67,8 +68,19 @@ function MediaList() {
             {mediaList.length > 0 ? (
                 <ul>
                     {mediaList.map((interaction) => (
-                        <li key={interaction.id}>
-                            <strong>{interaction.media?.title || 'Unknown Media'}</strong> - Status: {interaction.status} - Rating: {interaction.rating}/10
+                        <li
+                            key={interaction.id}
+                            style={{ display: 'flex', alignItems: 'center', margin: '10px 0', cursor: 'pointer' }}
+                            onClick={() => navigate(`/media/${interaction.media.id}`)} // Navigate to media details page
+                        >
+                            <img
+                                src={interaction.media?.image_url || 'default-placeholder-image-url.jpg'}
+                                alt={interaction.media?.title || 'Unknown Media'}
+                                style={{ width: '100px', height: '150px', marginRight: '15px' }}
+                            />
+                            <div>
+                                <strong>{interaction.media?.title || 'Unknown Media'}</strong> - Status: {interaction.status} - Rating: {interaction.rating}/10
+                            </div>
                         </li>
                     ))}
                 </ul>
