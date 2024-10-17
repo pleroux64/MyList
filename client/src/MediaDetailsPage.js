@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import apiClient from './axiosInstance'; 
 
 function MediaDetailsPage() {
     const { mediaId } = useParams(); // Extract the media ID from the URL
@@ -17,7 +18,7 @@ function MediaDetailsPage() {
 
     const fetchMediaDetails = async () => {
         try {
-            const response = await axios.get(`http://127.0.0.1:8000/api/media/detail/${mediaId}/`);
+            const response = await apiClient.get(`http://127.0.0.1:8000/api/media/detail/${mediaId}/`);
             setMediaDetails(response.data);
         } catch (error) {
             console.error('Error fetching media details:', error);
@@ -36,7 +37,7 @@ function MediaDetailsPage() {
         };
 
         try {
-            await axios.post(
+            await apiClient.post(
                 'http://127.0.0.1:8000/api/media/interactions/', 
                 payload,
                 {
@@ -74,7 +75,7 @@ function MediaDetailsPage() {
                         style={{ width: '200px', height: '300px' }}
                     />
                     <p>Type: {mediaDetails.media_type}</p>
-                    <p>Average Rating: {mediaDetails.rating}/10</p>
+                    <p>Average Rating: {mediaDetails.rating ? `${mediaDetails.rating}/10` : 'Not Yet Rated'}</p>
 
                     {/* Interaction Form */}
                     <div>
@@ -83,25 +84,32 @@ function MediaDetailsPage() {
                             Status:
                             <select value={status} onChange={(e) => setStatus(e.target.value)}>
                                 <option value="">Select a status</option>
-                                <option value="watched">Watched</option>
-                                <option value="watching">Watching</option>
-                                <option value="plan_to_watch">Plan to Watch</option>
-                                <option value="played">Played</option>
-                                <option value="playing">Playing</option>
-                                <option value="plan_to_play">Plan to Play</option>
+                                {/* Show different status options based on media type */}
+                                {mediaDetails.media_type === 'video_game' ? (
+                                    <>
+                                        <option value="played">Played</option>
+                                        <option value="playing">Playing</option>
+                                        <option value="plan_to_play">Plan to Play</option>
+                                    </>
+                                ) : (
+                                    <>
+                                        <option value="watched">Watched</option>
+                                        <option value="watching">Watching</option>
+                                        <option value="plan_to_watch">Plan to Watch</option>
+                                    </>
+                                )}
                             </select>
                         </label>
                         <br />
                         <label>
                             Rating:
-                            <input
-                                type="number"
-                                min="0"
-                                max="10"
-                                value={rating}
-                                onChange={(e) => setRating(e.target.value)}
-                                placeholder="Rate out of 10"
-                            />
+                            <select value={rating} onChange={(e) => setRating(e.target.value)}>
+                                <option value="">Rate out of 10</option>
+                                {/* Start from 1 to 10 */}
+                                {[...Array(10).keys()].map((val) => (
+                                    <option key={val + 1} value={val + 1}>{val + 1}</option> // Changed to start from 1
+                                ))}
+                            </select>
                         </label>
                         <br />
                         <button onClick={handleInteractionSubmit}>Save Interaction</button>

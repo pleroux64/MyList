@@ -1,46 +1,55 @@
-/* src/components/Layout.css */
-
 .layout-container {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
 }
-  
+
 .banner {
     background-color: #333;
     color: white;
-    padding: 15px;
+    padding: 10px; /* Reduced padding */
     text-align: center;
     position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start; /* Keeps content aligned at the top */
+    height: 80px; /* Reduced the height to make the banner thinner */
 }
-  
+
+.banner h1 {
+    margin: 0;
+    padding-top: 5px; /* Adjusts MyList logo positioning for the new thinner banner */
+}
+
 .navigation {
-    margin-top: 10px;
+    position: absolute;
+    bottom: 10px; /* Moved 10px up from the bottom to add space */
+    left: 15px; /* Keep the horizontal alignment the same */
 }
-  
+
 .navigation a {
     color: white;
     margin: 0 15px;
     text-decoration: none;
     font-weight: bold;
 }
-  
+
 .navigation a:hover {
     text-decoration: underline;
 }
-  
+
 .user-menu {
     display: inline-block;
     position: relative;
     cursor: pointer;
     margin-left: 20px;
 }
-  
+
 .username {
     color: white;
     font-weight: bold;
 }
-  
+
 .dropdown-menu {
     position: absolute;
     top: 30px;
@@ -61,7 +70,7 @@
     cursor: pointer;
     width: 100%;
 }
-  
+
 .dropdown-menu button:hover {
     background-color: #555;
 }
@@ -71,7 +80,7 @@
     padding: 20px;
     background-color: #f4f4f4;
 }
-  
+
 .footer {
     background-color: #333;
     color: white;
@@ -79,37 +88,53 @@
     padding: 10px;
 }
 
-/* New styles for the search bar and search dropdown */
-.search-bar {
-    position: relative;
-    margin-top: 15px;
+/* Adjusted styles for the search bar aligned to the right */
+.search-container {
+    display: flex;
+    justify-content: flex-end; /* Aligns the search bar to the right */
+    align-items: center;
+    position: absolute;
+    bottom: 10px; /* Moved 10px up from the bottom to align with the buttons */
+    right: 15px; /* Maintain a margin to the right */
 }
 
-.search-bar input {
+.search-bar {
+    display: flex;
+    align-items: center;
+}
+
+.media-type-dropdown {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px 0 0 4px;
+    background-color: white;
+}
+
+.search-input {
     padding: 8px;
     width: 250px;
     border: 1px solid #ccc;
-    border-radius: 4px;
+    border-left: none;
+    border-radius: 0;
 }
 
-.search-bar button {
+.search-button {
     padding: 8px 12px;
-    margin-left: 5px;
     background-color: #007bff;
     color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 0 4px 4px 0;
     cursor: pointer;
 }
 
-.search-bar button:hover {
+.search-button:hover {
     background-color: #0056b3;
 }
 
+/* Dropdown for search results */
 .search-dropdown {
     position: absolute;
-    top: 45px; /* Adjust this value to position the dropdown correctly */
-    left: 0;
+    top: 45px;
     background-color: white;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -119,7 +144,7 @@
     width: 100%;
     max-height: 200px;
     overflow-y: auto;
-    z-index: 1000; /* Ensure the dropdown appears above other elements */
+    z-index: 1000;
 }
 
 .search-dropdown li {
@@ -127,6 +152,7 @@
     display: flex;
     align-items: center;
     cursor: pointer;
+    color: black; /* Ensure text is black */
 }
 
 .search-dropdown li:hover {

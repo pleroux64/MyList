@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import apiClient from './axiosInstance'; 
 
 function TopMediaListsPage() {
     const [mediaType, setMediaType] = useState('movie'); // Default to 'movie' initially
@@ -19,7 +20,7 @@ function TopMediaListsPage() {
 
         try {
             // Fetch the top media list from your database for the selected media type
-            const response = await axios.get(`http://127.0.0.1:8000/api/media/top-media/${type}/`);
+            const response = await apiClient.get(`http://127.0.0.1:8000/api/media/top-media/${type}/`);
             setTopMediaList(response.data);
         } catch (error) {
             console.error('Error fetching top media list:', error);
@@ -63,7 +64,7 @@ function TopMediaListsPage() {
                                 style={{ width: '100px', height: '150px', marginRight: '15px' }}
                             />
                             <div>
-                                <strong>{media.title}</strong> - Average Rating: {media.average_rating || 'Not Yet Rated'}
+                                <strong>{media.title}</strong> - Average Rating: {media.average_rating ? `${media.average_rating}/10` : 'Not Yet Rated'}
                             </div>
                         </li>
                     ))}

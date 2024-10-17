@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import apiClient from './axiosInstance'; 
 
 function MediaList() {
     const [mediaType, setMediaType] = useState('movie');
@@ -26,7 +27,7 @@ function MediaList() {
         }
 
         try {
-            const response = await axios.get(`http://127.0.0.1:8000/api/media/user-media-list/`, {
+            const response = await apiClient.get(`http://127.0.0.1:8000/api/media/user-media-list/`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },

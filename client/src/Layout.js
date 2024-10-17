@@ -1,35 +1,61 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import apiClient from './axiosInstance'; 
+
 import './Layout.css';
 
 function Layout({ children, isAuthenticated, username, handleLogout }) {
-  const [showDropdown, setShowDropdown] = useState(false);
+  const [showUserDropdown, setShowUserDropdown] = useState(false); // For user dropdown
+  const [showSearchDropdown, setShowSearchDropdown] = useState(false); // For search results dropdown
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [mediaType, setMediaType] = useState('anime'); // Default media type
   const navigate = useNavigate();
+  const searchContainerRef = useRef(null); // Ref for the search container
+  const userMenuRef = useRef(null); // Ref for the user menu
 
   useEffect(() => {
-    setShowDropdown(false);
+    setShowUserDropdown(false);
   }, [isAuthenticated]);
 
-  const toggleDropdown = () => {
-    setShowDropdown((prev) => !prev);
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      // Close dropdowns if clicked outside of them
+      if (searchContainerRef.current && !searchContainerRef.current.contains(event.target)) {
+        setShowSearchDropdown(false);
+      }
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
+        setShowUserDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showUserDropdown]);
+
+  const toggleUserDropdown = (e) => {
+    e.stopPropagation(); // Prevent event from propagating to other elements
+    setShowUserDropdown((prev) => !prev);
   };
 
   const handleSearch = async () => {
     if (searchTerm.trim() === '') {
       setSearchResults([]);
-      setShowDropdown(false);
+      setShowSearchDropdown(false);
       return;
     }
 
     setLoading(true);
     try {
-      const response = await axios.get(`http://127.0.0.1:8000/api/media/search/?q=${searchTerm}`);
+      // Pass both the searchTerm and the mediaType to the backend
+      const response = await apiClient.get(`http://127.0.0.1:8000/api/media/search/?q=${searchTerm}&media_type=${mediaType}`);
+      console.log('Search results:', response.data);  // Log the results here
       setSearchResults(response.data);
-      setShowDropdown(true);
+      setShowSearchDropdown(true);
     } catch (error) {
       console.error('Error searching media:', error);
     } finally {
@@ -39,13 +65,16 @@ function Layout({ children, isAuthenticated, username, handleLogout }) {
 
   const handleSearchInputChange = (e) => {
     setSearchTerm(e.target.value);
-    handleSearch();
+  };
+
+  const handleMediaTypeChange = (e) => {
+    setMediaType(e.target.value);
   };
 
   const handleResultClick = (media) => {
     setSearchTerm('');
     setSearchResults([]);
-    setShowDropdown(false);
+    setShowSearchDropdown(false);
     navigate(`/media/${media.id}`);
   };
 
@@ -63,11 +92,11 @@ function Layout({ children, isAuthenticated, username, handleLogout }) {
               <Link to="/register">Register</Link>
             </>
           ) : (
-            <div className="user-menu">
-              <span onClick={toggleDropdown} className="username">
+            <div className="user-menu" ref={userMenuRef}>
+              <span onClick={toggleUserDropdown} className="username">
                 {username} ▼
               </span>
-              {showDropdown && (
+              {showUserDropdown && (
                 <div className="dropdown-menu">
                   <button onClick={handleLogout}>Logout</button>
                 </div>
@@ -76,19 +105,35 @@ function Layout({ children, isAuthenticated, username, handleLogout }) {
           )}
         </nav>
 
-        {/* Search Bar Section */}
-        <div className="search-bar">
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={handleSearchInputChange}
-            placeholder="Search for media..."
-            onFocus={() => setShowDropdown(searchResults.length > 0)}
-          />
-          <button onClick={handleSearch}>Search</button>
+        {/* Search Bar Section aligned to the right */}
+        <div className="search-container" ref={searchContainerRef}>
+          <div className="search-bar">
+            {/* Media Type Selection Dropdown */}
+            <select className="media-type-dropdown" value={mediaType} onChange={handleMediaTypeChange}>
+              <option value="anime">Anime</option>
+              <option value="video_game">Video Game</option>
+              <option value="movie">Movie</option>
+              <option value="tv_show">TV Show</option>
+            </select>
+
+            {/* Search Input */}
+            <input
+              type="text"
+              className="search-input"
+              value={searchTerm}
+              onChange={handleSearchInputChange}
+              placeholder="Search for media..."
+              onFocus={() => setShowSearchDropdown(searchResults.length > 0)}
+            />
+
+            {/* Search Button */}
+            <button className="search-button" onClick={handleSearch}>
+              Search
+            </button>
+          </div>
 
           {/* Dropdown for search results */}
-          {showDropdown && searchResults.length > 0 && (
+          {showSearchDropdown && searchResults.length > 0 && (
             <ul className="search-dropdown">
               {loading ? (
                 <li>Loading...</li>

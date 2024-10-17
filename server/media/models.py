@@ -12,7 +12,7 @@ class Media(models.Model):
 
     title = models.CharField(max_length=200)
     media_type = models.CharField(max_length=20, choices=MEDIA_TYPES)
-    rating = models.FloatField(default=0.0)
+    rating = models.FloatField(default=0.0)  # This can stay as is if you still want to track overall media ratings
     image_url = models.URLField(max_length=500, null=True, blank=True)  # New field to store image URLs
 
     def __str__(self):
@@ -29,7 +29,8 @@ class UserMediaInteraction(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     media = models.ForeignKey(Media, on_delete=models.CASCADE)
     status = models.CharField(max_length=20, choices=[(choice[0], choice[1]) for choices in STATUS_CHOICES.values() for choice in choices])
-    rating = models.IntegerField(null=True, blank=True, validators=[MinValueValidator(0), MaxValueValidator(10)])
+    # Set minimum rating to 1 and maximum to 10
+    rating = models.IntegerField(null=True, blank=True, validators=[MinValueValidator(1), MaxValueValidator(10)])
 
     def save(self, *args, **kwargs):
         # Validate that the status is appropriate for the media type

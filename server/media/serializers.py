@@ -13,6 +13,14 @@ class UserMediaInteractionSerializer(serializers.ModelSerializer):
         model = UserMediaInteraction
         fields = ['id', 'media', 'status', 'rating']
 
+    def validate_rating(self, value):
+        """
+        Check that the rating is at least 1.
+        """
+        if value is not None and value < 1:
+            raise serializers.ValidationError("Rating must be at least 1.")
+        return value
+
     def to_representation(self, instance):
         if isinstance(instance, UserMediaInteraction):
             # Only access the media attribute if instance is a UserMediaInteraction model instance
