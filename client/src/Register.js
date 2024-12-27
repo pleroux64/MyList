@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import apiClient from './axiosInstance'; 
+import './auth.css';  // Import the CSS file for styling
 
 function Register() {
   const [username, setUsername] = useState('');
@@ -19,7 +19,6 @@ function Register() {
         password,
       });
 
-      // Redirect to the home page after successful registration
       navigate('/');
     } catch (error) {
       setError('Failed to register. Please try again.');
@@ -27,9 +26,9 @@ function Register() {
   };
 
   return (
-    <div>
+    <div className="auth-container">
       <h2>Register</h2>
-      <form onSubmit={handleSubmit}>
+      <form className="auth-form" onSubmit={handleSubmit}>
         <input
           type="text"
           placeholder="Username"
@@ -50,7 +49,7 @@ function Register() {
         />
         <button type="submit">Register</button>
       </form>
-      {error && <p>{error}</p>}
+      {error && <p className="error-message">{error}</p>}
     </div>
   );
 }

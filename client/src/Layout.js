@@ -78,6 +78,12 @@ function Layout({ children, isAuthenticated, username, handleLogout }) {
     navigate(`/media/${media.id}`);
   };
 
+  // Updated handleLogout function
+  const handleLogoutClick = () => {
+    handleLogout(); // Call the passed-in logout function
+    navigate('/');  // Redirect to the home page after logout
+  };
+
   return (
     <div className="layout-container">
       <header className="banner">
@@ -85,11 +91,11 @@ function Layout({ children, isAuthenticated, username, handleLogout }) {
         <nav className="navigation">
           <Link to="/">Home</Link>
           {isAuthenticated && <Link to="/media-list">Your Media List</Link>}
-          <Link to="/top-media-lists">Top Media Lists</Link>
+          <Link to="/top-media-lists">Top Media</Link>
           {!isAuthenticated ? (
             <>
               <Link to="/login">Login</Link>
-              <Link to="/register">Register</Link>
+              <Link to="/register">Sign Up</Link>
             </>
           ) : (
             <div className="user-menu" ref={userMenuRef}>
@@ -98,7 +104,7 @@ function Layout({ children, isAuthenticated, username, handleLogout }) {
               </span>
               {showUserDropdown && (
                 <div className="dropdown-menu">
-                  <button onClick={handleLogout}>Logout</button>
+                  <button onClick={handleLogoutClick}>Logout</button>
                 </div>
               )}
             </div>
@@ -155,6 +161,15 @@ function Layout({ children, isAuthenticated, username, handleLogout }) {
       </header>
 
       <main className="content">
+        {!isAuthenticated && (
+          <div className="login-prompt">
+            <p>
+              <strong>Log in to start rating and tracking the media you enjoy!</strong>
+              <br />
+              <Link to="/login" className="login-link">Login</Link> or <Link to="/register" className="login-link">Sign Up</Link>
+            </p>
+          </div>
+        )}
         {children}
       </main>
 

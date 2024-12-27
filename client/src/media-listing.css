@@ -1,0 +1,319 @@
+/* General Page Layout */
+body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background-color: #f4faff;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+.container {
+    width: 80%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Titles */
+h1, h2, h3 {
+    color: #0077b6;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+h1 {
+    font-size: 36px;
+    font-weight: bold;
+}
+
+h2, h3 {
+    font-size: 28px;
+    font-weight: 600;
+}
+
+/* Form Container */
+.form-container, .interaction-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+label {
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: #0077b6;
+}
+
+select, input[type="checkbox"] {
+    padding: 10px;
+    margin: 10px;
+    border-radius: 8px;
+    border: 2px solid #0077b6;
+    background-color: #e0f7fa;
+    font-size: 16px;
+}
+
+button {
+    padding: 12px 20px;
+    background-color: #ffa726;
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #ff7043;
+}
+
+/* Error Message */
+.error-text {
+    color: red;
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+/* Media Listing */
+.media-list {
+    padding: 20px;
+    list-style-type: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+/* Flex container for media item */
+.media-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background-color: #f8faff;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out, background-color 0.3s;
+    height: 400px; /* Fixed height to ensure consistency */
+}
+
+.media-item:hover {
+    transform: translateY(-8px);
+    background-color: #e0f7fa;
+}
+
+/* Flex layout for media details (title, image, and rating) */
+.media-item-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+}
+
+/* Fixed height for text and rating section */
+.media-details-container {
+    height: 100px; /* Adjust height to fit all text and ratings */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 100%;
+    padding-top: 10px;
+}
+
+/* Ensures all ratings are at the same vertical level */
+.media-rating {
+    background-color: #ffa726;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-weight: bold;
+    color: #fff;
+}
+
+/* Title styling */
+.media-title {
+    font-weight: bold;
+    font-size: 18px;
+    color: #0077b6;
+    word-wrap: break-word;
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+/* Image Container */
+.image-container {
+    width: 200px;
+    height: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    background-color: #eceff1;
+    border-radius: 12px;
+    margin-bottom: 15px;
+}
+
+.image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* Media Details Specific Styling */
+.media-details {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.media-details-title {
+    font-size: 32px;
+    font-weight: bold;
+    color: #0077b6;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Flex layout for media details (image and info) */
+.media-details-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+/* Media Info Group Styling */
+.media-info-group {
+    font-size: 18px;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Interaction Form Specific */
+.interaction-form {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: #e0f7fa;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.form-title {
+    font-size: 24px;
+    color: #0077b6;
+    margin-bottom: 20px;
+}
+
+/* Adjusted styles for the media type and rating options */
+select.form-control {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    font-size: 16px;
+    border-radius: 8px;
+    border: 2px solid #0077b6;
+    background-color: #ffffff;
+}
+
+/* Button */
+button.submit-button {
+    padding: 12px 20px;
+    background-color: #ffa726;
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 100%;
+    margin-top: 20px;
+}
+
+button.submit-button:hover {
+    background-color: #ff7043;
+}
+
+/* Error Message */
+.error-text {
+    color: red;
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+/* General messages */
+.general-message {
+    padding: 15px;
+    margin-bottom: 20px;
+    background-color: #f0f8ff;
+    border-left: 5px solid #0077b6;
+    font-size: 16px;
+    font-style: italic;
+    color: #333;
+}
+
+/* No media message */
+.no-media-message {
+    color: #666;
+    font-size: 18px;
+    text-align: center;
+    padding: 20px;
+    background-color: #f8f8f8;
+    border-radius: 8px;
+    margin-top: 20px;
+    border: 1px solid #ddd;
+}
+
+/* Horizontal scrolling for home page media lists */
+.media-list.horizontal-scroll {
+    display: flex;
+    overflow-x: auto;
+    padding: 10px 0;
+    list-style-type: none;
+    gap: 20px;
+}
+
+.media-item {
+    flex: 0 0 auto;
+    width: 150px;
+}
+
+/* Adjust the image size to fit smaller items in horizontal scrolling */
+.image-container img {
+    width: 100%;
+    height: 200px;
+    object-fit: contain;
+    border-radius: 8px;
+}
+
+/* Styling for top listing numbers */
+.top-list-number {
+    font-size: 32px;
+    font-weight: bold;
+    color: #ffa726;
+    margin-right: 10px;
+    text-align: center;
+}
+.media-description {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    font-size: 16px;
+    line-height: 1.6;
+}
+

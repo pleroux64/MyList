@@ -1,0 +1,154 @@
+/* General Page Layout */
+body {
+    font-family: 'Helvetica Neue', Arial, sans-serif; /* Modern and clean font */
+    background-color: #f4faff; /* Light blue background for the entire page */
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+.container {
+    width: 80%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px;
+    background-color: #ffffff; /* White container background */
+    border-radius: 12px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); /* Slight shadow for depth */
+}
+
+/* Headings */
+h1, h2 {
+    color: #0077b6; /* Confident dark blue for headings */
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+h1 {
+    font-size: 36px;
+    font-weight: bold;
+}
+
+h2 {
+    font-size: 28px;
+    font-weight: 600;
+}
+
+/* Form elements */
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+label {
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: #0077b6;
+}
+
+select, input[type="checkbox"] {
+    padding: 10px;
+    margin: 10px;
+    border-radius: 8px;
+    border: 2px solid #0077b6;
+    background-color: #e0f7fa; /* Light blue background for form elements */
+    font-size: 16px;
+}
+
+button {
+    padding: 12px 20px;
+    background-color: #ffa726; /* Vibrant orange for button */
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #ff7043; /* Darker orange on hover */
+}
+
+/* Media Listing */
+.media-list {
+    padding: 20px;
+    list-style-type: none; /* Remove bullet points */
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px; /* Space between media items */
+}
+
+/* Individual media item */
+.media-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background-color: #f8faff; /* Light blue background for media items */
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1); /* Softer shadow */
+    transition: transform 0.3s ease-in-out, background-color 0.3s;
+}
+
+.media-item:hover {
+    transform: translateY(-8px);
+    background-color: #e0f7fa; /* Slightly darker blue on hover */
+}
+
+/* Media title styling */
+.media-title {
+    margin: 10px 0;
+    font-weight: bold;
+    font-size: 18px;
+    color: #0077b6; /* Stronger blue for titles */
+}
+
+/* Ranking number styling */
+.ranking {
+    font-size: 26px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #ff6f61; /* Coral color for the ranking */
+}
+
+/* Media rating styling */
+.media-rating {
+    background-color: #ffa726; /* Vibrant orange for rating */
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-weight: bold;
+    color: #fff;
+    margin-top: 15px;
+}
+
+/* Image container */
+.image-container {
+    width: 150px;
+    height: 225px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    background-color: #eceff1; /* Light gray for image background */
+    border-radius: 12px;
+    margin-bottom: 15px; /* Space between image and title */
+}
+
+.image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Preserve image aspect ratio */
+}
+
+/* Footer styling */
+.footer {
+    text-align: center;
+    margin-top: 40px;
+    font-size: 14px;
+    color: #0077b6;
+}
+

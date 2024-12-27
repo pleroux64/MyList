@@ -1,0 +1,16 @@
+.image-container {
+    width: 150px; /* Fixed width for the container */
+    height: 225px; /* Fixed height for the container */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden; /* Hide any overflow to ensure images stay within the container */
+    background-color: #f0f0f0; /* Optional background for better layout */
+    border-radius: 10px; /* Optional for rounded corners */
+}
+
+.image-container img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain; /* Ensures images fit inside the container without distortion */
+}

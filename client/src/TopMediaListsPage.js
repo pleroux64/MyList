@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import apiClient from './axiosInstance'; 
+import apiClient from './axiosInstance';
+import './media-listing.css'; // Import your CSS file
 
 function TopMediaListsPage() {
     const [mediaType, setMediaType] = useState('movie'); // Default to 'movie' initially
     const [topMediaList, setTopMediaList] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const navigate = useNavigate(); // For navigation
+    const navigate = useNavigate();
 
     useEffect(() => {
-        fetchTopMediaListByType(mediaType); // Fetch the top media list whenever the media type changes
+        fetchTopMediaListByType(mediaType);
     }, [mediaType]);
 
     const fetchTopMediaListByType = async (type) => {
@@ -19,7 +19,6 @@ function TopMediaListsPage() {
         setError(null);
 
         try {
-            // Fetch the top media list from your database for the selected media type
             const response = await apiClient.get(`http://127.0.0.1:8000/api/media/top-media/${type}/`);
             setTopMediaList(response.data);
         } catch (error) {
@@ -30,18 +29,13 @@ function TopMediaListsPage() {
         }
     };
 
-    if (loading) {
-        return <p>Loading top media list...</p>;
-    }
-
-    if (error) {
-        return <p>{error}</p>;
-    }
+    if (loading) return <p>Loading top media list...</p>;
+    if (error) return <p>{error}</p>;
 
     return (
-        <div>
+        <div className="container">
             <h2>Top {mediaType.charAt(0).toUpperCase() + mediaType.slice(1)}s</h2>
-            <div>
+            <div className="form-container">
                 <label>Select Media Type: </label>
                 <select value={mediaType} onChange={(e) => setMediaType(e.target.value)}>
                     <option value="movie">Movies</option>
@@ -51,20 +45,24 @@ function TopMediaListsPage() {
                 </select>
             </div>
             {topMediaList.length > 0 ? (
-                <ul>
-                    {topMediaList.map((media) => (
+                <ul className="media-list">
+                    {topMediaList.map((media, index) => (
                         <li
                             key={media.id}
-                            style={{ display: 'flex', alignItems: 'center', margin: '10px 0', cursor: 'pointer' }}
-                            onClick={() => navigate(`/media/${media.id}`)} // Navigate to media details page
+                            className="media-item"
+                            onClick={() => navigate(`/media/${media.id}`)}
                         >
-                            <img
-                                src={media.image_url || 'default-placeholder-image-url.jpg'}
-                                alt={media.title}
-                                style={{ width: '100px', height: '150px', marginRight: '15px' }}
-                            />
-                            <div>
-                                <strong>{media.title}</strong> - Average Rating: {media.average_rating ? `${media.average_rating}/10` : 'Not Yet Rated'}
+                            {/* Display the ranking number with the new class */}
+                            <div className="top-list-number">{index + 1}</div>
+                            <div className="image-container">
+                                <img
+                                    src={media.image_url || 'default-placeholder-image-url.jpg'}
+                                    alt={media.title}
+                                />
+                            </div>
+                            <div className="media-title">{media.title}</div>
+                            <div className="media-rating">
+                                {media.average_rating ? `${media.average_rating}/10` : 'Not Yet Rated'}
                             </div>
                         </li>
                     ))}
