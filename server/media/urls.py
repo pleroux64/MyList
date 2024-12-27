@@ -9,7 +9,10 @@ from .views import (
     get_top_media_list_by_type,
     get_user_info,
     get_popular_games,
-    get_media_detail
+    get_media_detail,
+    train_recommendation_models,  # Import the new endpoint
+    get_recommendations,  # Import the recommendations endpoint
+    get_user_media_interaction
 )
 
 router = DefaultRouter()
@@ -25,4 +28,8 @@ urlpatterns = [
     path('', include(router.urls)),
     path('popular-games/', get_popular_games, name='get_popular_games'),
     path('detail/<int:media_id>/', get_media_detail, name='get_media_detail'),
+    path('train-models/', train_recommendation_models, name='train_recommendation_models'),  # Add this line
+    path('recommendations/', get_recommendations, name='get_recommendations'),  # Add this line for recommendations
+    path('user-media-interaction/<int:media_id>/', get_user_media_interaction, name='get_user_media_interaction'),
+
 ]

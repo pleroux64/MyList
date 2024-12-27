@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import apiClient from './axiosInstance'; 
+import './auth.css';  // Import the CSS file for styling
 
 function Login() {
   const [username, setUsername] = useState('');
@@ -17,17 +17,12 @@ function Login() {
         password,
       });
 
-      // Assuming login is successful, save the tokens and update local storage
       localStorage.setItem('accessToken', response.data.access);
       localStorage.setItem('refreshToken', response.data.refresh);
-
-      // Set the username in localStorage to update the display in the Layout
       localStorage.setItem('username', username);
 
-      // Trigger a page update by setting the isAuthenticated state in other components
       window.dispatchEvent(new Event('storage'));
 
-      // Redirect to the home page
       navigate('/');
     } catch (error) {
       setError('Invalid username or password. Please try again.');
@@ -35,9 +30,9 @@ function Login() {
   };
 
   return (
-    <div>
+    <div className="auth-container">
       <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
+      <form className="auth-form" onSubmit={handleSubmit}>
         <input
           type="text"
           placeholder="Username"
@@ -52,7 +47,10 @@ function Login() {
         />
         <button type="submit">Login</button>
       </form>
-      {error && <p>{error}</p>}
+      {error && <p className="error-message">{error}</p>}
+      <div className="auth-link">
+        <p>Don't have an account? <Link to="/register">Sign up</Link></p>
+      </div>
     </div>
   );
 }

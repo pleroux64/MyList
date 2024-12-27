@@ -4,7 +4,7 @@ from .models import UserMediaInteraction, Media
 class MediaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Media
-        fields = ['id', 'title', 'media_type', 'rating', 'image_url']  # Include the image_url field
+        fields = ['id', 'title', 'media_type', 'rating', 'image_url', 'description']  # Include the image_url field
 
 class UserMediaInteractionSerializer(serializers.ModelSerializer):
     media = serializers.PrimaryKeyRelatedField(queryset=Media.objects.all())

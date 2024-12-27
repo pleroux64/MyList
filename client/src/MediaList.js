@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import apiClient from './axiosInstance'; 
+import apiClient from './axiosInstance';
+import './media-listing.css'; // Import the unified CSS
 
 function MediaList() {
     const [mediaType, setMediaType] = useState('movie');
     const [mediaList, setMediaList] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const navigate = useNavigate(); // For navigation
+    const navigate = useNavigate();
 
     useEffect(() => {
         fetchMediaListByType(mediaType);
@@ -36,11 +36,7 @@ function MediaList() {
             setMediaList(response.data);
         } catch (error) {
             console.error('Error fetching media list:', error);
-            if (error.response && error.response.status === 401) {
-                setError('Unauthorized access. Please log in again.');
-            } else {
-                setError('An error occurred while fetching the media list.');
-            }
+            setError('An error occurred while fetching the media list.');
         } finally {
             setLoading(false);
         }
@@ -55,9 +51,9 @@ function MediaList() {
     }
 
     return (
-        <div>
+        <div className="container">
             <h2>Your Media List</h2>
-            <div>
+            <div className="form-container">
                 <label>Select Media Type: </label>
                 <select value={mediaType} onChange={(e) => setMediaType(e.target.value)}>
                     <option value="movie">Movies</option>
@@ -67,26 +63,30 @@ function MediaList() {
                 </select>
             </div>
             {mediaList.length > 0 ? (
-                <ul>
+                <ul className="media-list">
                     {mediaList.map((interaction) => (
                         <li
                             key={interaction.id}
-                            style={{ display: 'flex', alignItems: 'center', margin: '10px 0', cursor: 'pointer' }}
-                            onClick={() => navigate(`/media/${interaction.media.id}`)} // Navigate to media details page
+                            className="media-item"
+                            onClick={() => navigate(`/media/${interaction.media.id}`)}
                         >
-                            <img
-                                src={interaction.media?.image_url || 'default-placeholder-image-url.jpg'}
-                                alt={interaction.media?.title || 'Unknown Media'}
-                                style={{ width: '100px', height: '150px', marginRight: '15px' }}
-                            />
-                            <div>
-                                <strong>{interaction.media?.title || 'Unknown Media'}</strong> - Status: {interaction.status} - Rating: {interaction.rating}/10
+                            <div className="image-container">
+                                <img
+                                    src={interaction.media?.image_url || 'default-placeholder-image-url.jpg'}
+                                    alt={interaction.media?.title || 'Unknown Media'}
+                                />
+                            </div>
+                            <div className="media-title">
+                                {interaction.media?.title || 'Unknown Media'}
+                            </div>
+                            <div className="media-rating">
+                                Status: {interaction.status} - Rating: {interaction.rating}/10
                             </div>
                         </li>
                     ))}
                 </ul>
             ) : (
-                <p>No media items found for the selected type.</p>
+                <p className="no-media-message">You haven't interacted with any {mediaType.replace('_', ' ')}s yet.</p>
             )}
         </div>
     );

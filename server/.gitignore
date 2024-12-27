@@ -39,3 +39,26 @@ htmlcov/
 # System specific files
 .DS_Store
 Thumbs.db
+
+# Model files (generated during training)
+server/models/*.pkl
+
+# Database backups
+server/*.sql
+
+# Command outputs and temporary files
+*.tmp
+*.bak
+*.swp
+*.out
+*.err
+
+# Node.js specific (if any frontend dependency exists)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build artifacts
+build/
+dist/

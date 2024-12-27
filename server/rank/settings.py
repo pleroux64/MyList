@@ -11,6 +11,11 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import os
+import dotenv
+
+# Load environment variables from .env file
+dotenv.load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,14 +25,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-)32b2bb@7r$p(y)soq8f(!#tn#9ig*38nwk7^1^p)(kpr&3%++'
+SECRET_KEY = os.getenv('SECRET_KEY', 'default-django-insecure-key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost').split(',')
 
-RAWG_API_KEY = 'ea05e5a7539a469f8bef014effda3748'
+RAWG_API_KEY = os.getenv('RAWG_API_KEY', '')
+TMDB_API_KEY = os.getenv('TMDB_API_KEY', '')
+
+MODELS_DIR = os.getenv('MODELS_DIR', 'models')
 
 
 # Application definition
@@ -50,7 +58,6 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
     'django.contrib.sites',
     'corsheaders'
-
 ]
 
 REST_FRAMEWORK = {
@@ -103,10 +110,15 @@ WSGI_APPLICATION = 'rank.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('DB_NAME', 'rankdb'),
+        'USER': os.getenv('DB_USER', 'postgres'),
+        'PASSWORD': os.getenv('DB_PASSWORD', 'Mochilas'),
+        'HOST': os.getenv('DB_HOST', 'localhost'),
+        'PORT': os.getenv('DB_PORT', '5432'),
     }
 }
+
 
 
 # Password validation
@@ -144,6 +156,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
+
+# Directory for Recommendation Models
+MODELS_DIR = os.getenv('MODELS_DIR', 'models')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
