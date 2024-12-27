@@ -19,7 +19,7 @@ function TopMediaListsPage() {
         setError(null);
 
         try {
-            const response = await apiClient.get(`http://127.0.0.1:8000/api/media/top-media/${type}/`);
+            const response = await apiClient.get(`media/top-media/${type}/`);
             setTopMediaList(response.data);
         } catch (error) {
             console.error('Error fetching top media list:', error);

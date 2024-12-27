@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 const apiClient = axios.create({
-    baseURL: 'http://127.0.0.1:8000/api/', // Replace with your backend API base URL
+    baseURL: process.env.REACT_APP_BACKEND_URL || 'http://127.0.0.1:8000/api/', // Use .env for production, fallback to local
 });
 
 // Add an interceptor to handle token refresh on 401 Unauthorized responses
@@ -20,7 +20,7 @@ apiClient.interceptors.response.use(
             if (refreshToken) {
                 try {
                     // Make a request to refresh the access token using the refresh token
-                    const response = await axios.post('http://127.0.0.1:8000/api/auth/token/refresh/', {
+                    const response = await apiClient.post('auth/token/refresh/', {
                         refresh: refreshToken,
                     });
 

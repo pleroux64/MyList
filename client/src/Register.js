@@ -13,7 +13,7 @@ function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await apiClient.post('http://127.0.0.1:8000/api/auth/register/', {
+      await apiClient.post('auth/register/', {
         username,
         email,
         password,

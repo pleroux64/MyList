@@ -27,7 +27,7 @@ function MediaList() {
         }
 
         try {
-            const response = await apiClient.get(`http://127.0.0.1:8000/api/media/user-media-list/`, {
+            const response = await apiClient.get(`media/user-media-list/`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },

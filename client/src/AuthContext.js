@@ -17,7 +17,7 @@ export const AuthProvider = ({ children }) => {
 
   const fetchUserInfo = useCallback(async (token) => {
     try {
-      const response = await axios.get('http://127.0.0.1:8000/api/media/user-info/', {
+      const response = await axios.get('media/user-info/', {
         headers: {
           Authorization: `Bearer ${token}`,
         },

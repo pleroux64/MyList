@@ -24,7 +24,7 @@ function MediaDetailsPage() {
     // Fetch the media details
     const fetchMediaDetails = async () => {
         try {
-            const response = await apiClient.get(`http://127.0.0.1:8000/api/media/detail/${mediaId}/`);
+            const response = await apiClient.get(`media/detail/${mediaId}/`);
             setMediaDetails(response.data);
         } catch (error) {
             console.error('Error fetching media details:', error);
@@ -38,7 +38,7 @@ function MediaDetailsPage() {
     const fetchUserInteraction = async () => {
         try {
             const token = localStorage.getItem('accessToken');
-            const response = await apiClient.get(`http://127.0.0.1:8000/api/user-media-interaction/${mediaId}/`, {
+            const response = await apiClient.get(`user-media-interaction/${mediaId}/`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -63,7 +63,7 @@ function MediaDetailsPage() {
 
         try {
             await apiClient.post(
-                'http://127.0.0.1:8000/api/media/interactions/', 
+                'media/interactions/', 
                 payload,
                 {
                     headers: {
