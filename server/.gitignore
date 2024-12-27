@@ -62,3 +62,7 @@ yarn-error.log*
 # Build artifacts
 build/
 dist/
+
+# Ignore personal management commands
+server/media/management/commands/*
+!server/media/management/commands/__init__.py
