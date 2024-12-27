@@ -80,7 +80,14 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS', '').split(',')
+# CORS_ALLOWED_ORIGINS = [
+#     "http://localhost:3000",
+    
+# ]
+
+# Allow all origins for CORS (temporary for development)
+CORS_ALLOW_ALL_ORIGINS = True
+
 
 
 ROOT_URLCONF = 'rank.urls'
