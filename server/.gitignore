@@ -15,7 +15,7 @@ staticfiles/
 local_settings.py
 
 # Migrations (optional)
-**/migrations/*
+media/migrations/*
 
 # Environment variables
 .env
@@ -41,10 +41,10 @@ htmlcov/
 Thumbs.db
 
 # Model files (generated during training)
-server/models/*.pkl
+models/*.pkl
 
 # Database backups
-server/*.sql
+*.sql
 
 # Command outputs and temporary files
 *.tmp
@@ -53,16 +53,6 @@ server/*.sql
 *.out
 *.err
 
-# Node.js specific (if any frontend dependency exists)
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Build artifacts
-build/
-dist/
-
 # Ignore personal management commands
-server/media/management/commands/*
-!server/media/management/commands/__init__.py
+media/management/commands/*
+!media/management/commands/__init__.py
