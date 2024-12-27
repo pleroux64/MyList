@@ -52,7 +52,7 @@ function Layout({ children, isAuthenticated, username, handleLogout }) {
     setLoading(true);
     try {
       // Pass both the searchTerm and the mediaType to the backend
-      const response = await apiClient.get(`http://127.0.0.1:8000/api/media/search/?q=${searchTerm}&media_type=${mediaType}`);
+      const response = await apiClient.get(`media/search/?q=${searchTerm}&media_type=${mediaType}`);
       console.log('Search results:', response.data);  // Log the results here
       setSearchResults(response.data);
       setShowSearchDropdown(true);

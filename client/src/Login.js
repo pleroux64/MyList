@@ -12,7 +12,7 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await apiClient.post('http://127.0.0.1:8000/api/auth/token/', {
+      const response = await apiClient.post('auth/token/', {
         username,
         password,
       });
