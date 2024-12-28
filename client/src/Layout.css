@@ -177,11 +177,26 @@
 }
 
 .login-link {
-    color: #0077b6;
-    text-decoration: none;
-    font-weight: bold;
+    color: #0077b6; /* Consistent link color */
+    text-decoration: none; /* Remove underline */
+    font-weight: bold; /* Match link styling */
+    background: none; /* Remove default button background */
+    border: none; /* Remove default button border */
+    cursor: pointer; /* Pointer cursor for interactivity */
+    padding: 0; /* Remove default padding */
+    font-size: inherit; /* Ensure font size matches */
+    outline: none; /* Remove focus outline */
 }
+
 
 .login-link:hover {
     text-decoration: underline;
 }
+
+.demo-description {
+    font-size: 14px; /* Smaller text to differentiate */
+    color: #555; /* Neutral color for secondary text */
+    margin-top: 10px; /* Space above the description */
+    text-align: center; /* Centered under the login prompt */
+  }
+

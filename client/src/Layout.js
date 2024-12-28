@@ -1,19 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import apiClient from './axiosInstance'; 
-
+import apiClient from './axiosInstance';
 import './Layout.css';
 
 function Layout({ children, isAuthenticated, username, handleLogout }) {
-  const [showUserDropdown, setShowUserDropdown] = useState(false); // For user dropdown
-  const [showSearchDropdown, setShowSearchDropdown] = useState(false); // For search results dropdown
+  const [showUserDropdown, setShowUserDropdown] = useState(false);
+  const [showSearchDropdown, setShowSearchDropdown] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [mediaType, setMediaType] = useState('anime'); // Default media type
+  const [mediaType, setMediaType] = useState('anime');
   const navigate = useNavigate();
-  const searchContainerRef = useRef(null); // Ref for the search container
-  const userMenuRef = useRef(null); // Ref for the user menu
+  const searchContainerRef = useRef(null);
+  const userMenuRef = useRef(null);
 
   useEffect(() => {
     setShowUserDropdown(false);
@@ -21,7 +20,6 @@ function Layout({ children, isAuthenticated, username, handleLogout }) {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      // Close dropdowns if clicked outside of them
       if (searchContainerRef.current && !searchContainerRef.current.contains(event.target)) {
         setShowSearchDropdown(false);
       }
@@ -37,9 +35,22 @@ function Layout({ children, isAuthenticated, username, handleLogout }) {
     };
   }, [showUserDropdown]);
 
-  const toggleUserDropdown = (e) => {
-    e.stopPropagation(); // Prevent event from propagating to other elements
-    setShowUserDropdown((prev) => !prev);
+  const handleDemoLogin = async () => {
+    try {
+      const response = await apiClient.post('auth/token/', {
+        username: 'demo_user',
+        password: 'Demo@123',
+      });
+
+      localStorage.setItem('accessToken', response.data.access);
+      localStorage.setItem('refreshToken', response.data.refresh);
+      localStorage.setItem('username', 'demo_user');
+
+      window.dispatchEvent(new Event('storage'));
+      navigate('/');
+    } catch (error) {
+      alert('Failed to log in as the demo user. Please try again later.');
+    }
   };
 
   const handleSearch = async () => {
@@ -51,9 +62,7 @@ function Layout({ children, isAuthenticated, username, handleLogout }) {
 
     setLoading(true);
     try {
-      // Pass both the searchTerm and the mediaType to the backend
       const response = await apiClient.get(`media/search/?q=${searchTerm}&media_type=${mediaType}`);
-      console.log('Search results:', response.data);  // Log the results here
       setSearchResults(response.data);
       setShowSearchDropdown(true);
     } catch (error) {
@@ -71,17 +80,9 @@ function Layout({ children, isAuthenticated, username, handleLogout }) {
     setMediaType(e.target.value);
   };
 
-  const handleResultClick = (media) => {
-    setSearchTerm('');
-    setSearchResults([]);
-    setShowSearchDropdown(false);
-    navigate(`/media/${media.id}`);
-  };
-
-  // Updated handleLogout function
   const handleLogoutClick = () => {
-    handleLogout(); // Call the passed-in logout function
-    navigate('/');  // Redirect to the home page after logout
+    handleLogout();
+    navigate('/');
   };
 
   return (
@@ -99,7 +100,7 @@ function Layout({ children, isAuthenticated, username, handleLogout }) {
             </>
           ) : (
             <div className="user-menu" ref={userMenuRef}>
-              <span onClick={toggleUserDropdown} className="username">
+              <span onClick={() => setShowUserDropdown((prev) => !prev)} className="username">
                 {username} ▼
               </span>
               {showUserDropdown && (
@@ -111,41 +112,32 @@ function Layout({ children, isAuthenticated, username, handleLogout }) {
           )}
         </nav>
 
-        {/* Search Bar Section aligned to the right */}
         <div className="search-container" ref={searchContainerRef}>
           <div className="search-bar">
-            {/* Media Type Selection Dropdown */}
             <select className="media-type-dropdown" value={mediaType} onChange={handleMediaTypeChange}>
               <option value="anime">Anime</option>
               <option value="video_game">Video Game</option>
               <option value="movie">Movie</option>
               <option value="tv_show">TV Show</option>
             </select>
-
-            {/* Search Input */}
             <input
               type="text"
               className="search-input"
               value={searchTerm}
               onChange={handleSearchInputChange}
               placeholder="Search for media..."
-              onFocus={() => setShowSearchDropdown(searchResults.length > 0)}
             />
-
-            {/* Search Button */}
             <button className="search-button" onClick={handleSearch}>
               Search
             </button>
           </div>
-
-          {/* Dropdown for search results */}
           {showSearchDropdown && searchResults.length > 0 && (
             <ul className="search-dropdown">
               {loading ? (
                 <li>Loading...</li>
               ) : (
                 searchResults.map((media) => (
-                  <li key={media.id} onClick={() => handleResultClick(media)}>
+                  <li key={media.id} onClick={() => navigate(`/media/${media.id}`)}>
                     <img
                       src={media.image_url || 'default-placeholder-image-url.jpg'}
                       alt={media.title}
@@ -166,7 +158,14 @@ function Layout({ children, isAuthenticated, username, handleLogout }) {
             <p>
               <strong>Log in to start rating and tracking the media you enjoy!</strong>
               <br />
-              <Link to="/login" className="login-link">Login</Link> or <Link to="/register" className="login-link">Sign Up</Link>
+              <Link to="/login" className="login-link">Login</Link>, <Link to="/register" className="login-link">Sign Up</Link>, or{' '}
+              <button className="login-link" onClick={handleDemoLogin}>
+                Use Demo Account
+              </button>.
+            </p>
+            <p className="demo-description">
+              The demo account allows you to explore the app's features with pre-filled data, showcasing how the app looks after tracking and rating a variety of media. 
+              If you'd like to experience the app as a new user, feel free to create your own account with a fake email address for testing purposes.
             </p>
           </div>
         )}
