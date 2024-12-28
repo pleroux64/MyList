@@ -1,41 +1,45 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import apiClient from './axiosInstance';
-import './media-listing.css';  // Keep the unified CSS
+import './media-listing.css'; // Keep the unified CSS
 
 function Home({ isAuthenticated, handleLogout }) {
     const [recommendations, setRecommendations] = useState({
-        animeSpecific: [],
-        animeGeneral: [],
-        movieSpecific: [],
-        movieGeneral: [],
-        tvShowSpecific: [],
-        tvShowGeneral: [],
-        videoGameSpecific: [],
-        videoGameGeneral: [],
-        generalRecs: []
+        animeSpecific: { data: [], loading: true },
+        animeGeneral: { data: [], loading: true },
+        movieSpecific: { data: [], loading: true },
+        movieGeneral: { data: [], loading: true },
+        tvShowSpecific: { data: [], loading: true },
+        tvShowGeneral: { data: [], loading: true },
+        videoGameSpecific: { data: [], loading: true },
+        videoGameGeneral: { data: [], loading: true },
+        generalRecs: { data: [], loading: true },
     });
 
-    const navigate = useNavigate(); // Initialize useNavigate
+    const navigate = useNavigate();
 
     useEffect(() => {
         const token = localStorage.getItem('accessToken');
         if (token) {
             fetchAllRecommendations();
         } else {
-            setRecommendations({
-                animeSpecific: [],
-                animeGeneral: [],
-                movieSpecific: [],
-                movieGeneral: [],
-                tvShowSpecific: [],
-                tvShowGeneral: [],
-                videoGameSpecific: [],
-                videoGameGeneral: [],
-                generalRecs: []
-            });
+            resetRecommendations();
         }
     }, [isAuthenticated]);
+
+    const resetRecommendations = () => {
+        setRecommendations({
+            animeSpecific: { data: [], loading: false },
+            animeGeneral: { data: [], loading: false },
+            movieSpecific: { data: [], loading: false },
+            movieGeneral: { data: [], loading: false },
+            tvShowSpecific: { data: [], loading: false },
+            tvShowGeneral: { data: [], loading: false },
+            videoGameSpecific: { data: [], loading: false },
+            videoGameGeneral: { data: [], loading: false },
+            generalRecs: { data: [], loading: false },
+        });
+    };
 
     const fetchRecommendations = async (mediaType, useGeneralModel) => {
         try {
@@ -57,30 +61,31 @@ function Home({ isAuthenticated, handleLogout }) {
     };
 
     const fetchAllRecommendations = async () => {
-        const token = localStorage.getItem('accessToken');
-        if (!token) return;
+        const keys = [
+            { key: 'animeSpecific', mediaType: 'anime', general: false },
+            { key: 'animeGeneral', mediaType: 'anime', general: true },
+            { key: 'movieSpecific', mediaType: 'movie', general: false },
+            { key: 'movieGeneral', mediaType: 'movie', general: true },
+            { key: 'tvShowSpecific', mediaType: 'tv_show', general: false },
+            { key: 'tvShowGeneral', mediaType: 'tv_show', general: true },
+            { key: 'videoGameSpecific', mediaType: 'video_game', general: false },
+            { key: 'videoGameGeneral', mediaType: 'video_game', general: true },
+            { key: 'generalRecs', mediaType: 'all', general: true },
+        ];
 
-        const animeSpecific = await fetchRecommendations('anime', false);
-        const animeGeneral = await fetchRecommendations('anime', true);
-        const movieSpecific = await fetchRecommendations('movie', false);
-        const movieGeneral = await fetchRecommendations('movie', true);
-        const tvShowSpecific = await fetchRecommendations('tv_show', false);
-        const tvShowGeneral = await fetchRecommendations('tv_show', true);
-        const videoGameSpecific = await fetchRecommendations('video_game', false);
-        const videoGameGeneral = await fetchRecommendations('video_game', true);
-        const generalRecs = await fetchRecommendations('all', true);
+        for (const { key, mediaType, general } of keys) {
+            setRecommendations((prev) => ({
+                ...prev,
+                [key]: { ...prev[key], loading: true },
+            }));
 
-        setRecommendations({
-            animeSpecific,
-            animeGeneral,
-            movieSpecific,
-            movieGeneral,
-            tvShowSpecific,
-            tvShowGeneral,
-            videoGameSpecific,
-            videoGameGeneral,
-            generalRecs
-        });
+            const data = await fetchRecommendations(mediaType, general);
+
+            setRecommendations((prev) => ({
+                ...prev,
+                [key]: { data, loading: false },
+            }));
+        }
     };
 
     return (
@@ -88,15 +93,16 @@ function Home({ isAuthenticated, handleLogout }) {
             <h1>Welcome to MyList!</h1>
 
             <div className="general-message">
-                <p>The more media you rate, the more personalized your recommendations will be. If you haven't rated much yet, these recommendations may be based on general user preferences.</p>
+                <p>
+                    The more media you rate, the more personalized your recommendations will be. If you haven't rated much yet, these recommendations may be based on general user preferences.
+                </p>
             </div>
 
             {isAuthenticated ? (
                 <div>
                     <h2>Recommendations:</h2>
-
                     {Object.keys(recommendations).map((key) => {
-                        const recs = recommendations[key];
+                        const { data, loading } = recommendations[key];
                         let prompt = '';
 
                         // Set prompts based on the key
@@ -123,19 +129,18 @@ function Home({ isAuthenticated, handleLogout }) {
                         return (
                             <div key={key} className="recommendation-section">
                                 <h3>{prompt}</h3>
-                                {recs && recs.length > 0 ? (
+                                {loading ? (
+                                    <p>Loading recommendations...</p>
+                                ) : data.length > 0 ? (
                                     <ul className="media-list horizontal-scroll">
-                                        {recs.map((rec) => (
-                                            <li 
-                                                key={rec.title} 
+                                        {data.map((rec) => (
+                                            <li
+                                                key={rec.title}
                                                 className="media-item"
-                                                onClick={() => navigate(`/media/${rec.id}`)} // Add navigation on click
+                                                onClick={() => navigate(`/media/${rec.id}`)}
                                             >
                                                 <div className="image-container">
-                                                    <img
-                                                        src={rec.image_url}
-                                                        alt={rec.title}
-                                                    />
+                                                    <img src={rec.image_url} alt={rec.title} />
                                                 </div>
                                                 <div className="media-title">{rec.title}</div>
                                                 <div className="media-rating">
