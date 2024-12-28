@@ -39,7 +39,7 @@ function Home({ isAuthenticated, handleLogout }) {
 
     const fetchRecommendations = async (mediaType, useGeneralModel) => {
         try {
-            const response = await apiClient.get('http://localhost:8000/api/media/recommendations/', {
+            const response = await apiClient.get('media/recommendations/', {
                 params: {
                     media_type: mediaType,
                     use_general_model: useGeneralModel,
