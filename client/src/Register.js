@@ -13,15 +13,31 @@ function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      // Register the user
       await apiClient.post('auth/register/', {
         username,
         email,
         password,
       });
 
+      // Log the user in immediately
+      const loginResponse = await apiClient.post('auth/token/', {
+        username,
+        password,
+      });
+
+      // Store tokens in localStorage
+      localStorage.setItem('accessToken', loginResponse.data.access);
+      localStorage.setItem('refreshToken', loginResponse.data.refresh);
+      localStorage.setItem('username', username);
+
+      // Trigger storage event for state synchronization
+      window.dispatchEvent(new Event('storage'));
+
+      // Navigate to home page
       navigate('/');
     } catch (error) {
-      setError('Failed to register. Please try again.');
+      setError('Failed to register or log in. Please try again.');
     }
   };
 
