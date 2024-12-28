@@ -24,7 +24,7 @@ h2 {
     border: 2px solid #0077b6;
     background-color: #f0f8ff;
     font-size: 16px;
-    box-sizing: border-box;  /* Ensures padding is included within width */
+    box-sizing: border-box; /* Ensures padding is included within width */
 }
 
 .auth-form button {
@@ -42,6 +42,25 @@ h2 {
 
 .auth-form button:hover {
     background-color: #ff7043;
+}
+
+/* Demo Button Styles */
+.demo-button {
+    margin-top: 30px; /* Added space below the form */
+    width: 100%;      /* Consistent width with other buttons */
+    padding: 12px;
+    background-color: #0077b6;
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.demo-button:hover {
+    background-color: #005f99;
 }
 
 .error-message {
