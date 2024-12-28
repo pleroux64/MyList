@@ -9,6 +9,12 @@ function Login() {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
+  const handleDemoLogin = () => {
+    // Populate form with demo credentials
+    setUsername('demo_user');
+    setPassword('Demo@123');
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -48,6 +54,9 @@ function Login() {
         <button type="submit">Login</button>
       </form>
       {error && <p className="error-message">{error}</p>}
+      <button className="demo-button" onClick={handleDemoLogin}>
+        Use Demo Account
+      </button>
       <div className="auth-link">
         <p>Don't have an account? <Link to="/register">Sign up</Link></p>
       </div>
