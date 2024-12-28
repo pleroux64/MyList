@@ -40,8 +40,7 @@ htmlcov/
 .DS_Store
 Thumbs.db
 
-# Model files (generated during training)
-models/*.pkl
+
 
 # Database backups
 *.sql
