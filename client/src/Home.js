@@ -130,7 +130,10 @@ function Home({ isAuthenticated, handleLogout }) {
                             <div key={key} className="recommendation-section">
                                 <h3>{prompt}</h3>
                                 {loading ? (
-                                    <p>Loading recommendations...</p>
+                                    <div className="loading-spinner-container">
+                                        <div className="loading-spinner"></div>
+                                        <p>Loading recommendations...</p>
+                                    </div>
                                 ) : data.length > 0 ? (
                                     <ul className="media-list horizontal-scroll">
                                         {data.map((rec) => (

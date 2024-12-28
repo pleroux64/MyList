@@ -42,14 +42,6 @@ function MediaList() {
         }
     };
 
-    if (loading) {
-        return <p>Loading your media list...</p>;
-    }
-
-    if (error) {
-        return <p>{error}</p>;
-    }
-
     return (
         <div className="container">
             <h2>Your Media List</h2>
@@ -62,7 +54,15 @@ function MediaList() {
                     <option value="tv_show">TV Shows</option>
                 </select>
             </div>
-            {mediaList.length > 0 ? (
+
+            {loading ? (
+                <div className="loader-container">
+                    <div className="loader"></div>
+                    <p>Loading your media list...</p>
+                </div>
+            ) : error ? (
+                <p className="error-message">{error}</p>
+            ) : mediaList.length > 0 ? (
                 <ul className="media-list">
                     {mediaList.map((interaction) => (
                         <li

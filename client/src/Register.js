@@ -8,93 +8,112 @@ function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false); // Add loading state
   const navigate = useNavigate();
 
   const handleDemoLogin = async () => {
+    setLoading(true); // Show loader
     try {
-      // Log in as demo user
       const response = await apiClient.post('auth/token/', {
         username: 'demo_user',
         password: 'Demo@123',
       });
 
-      // Store tokens in localStorage
       localStorage.setItem('accessToken', response.data.access);
       localStorage.setItem('refreshToken', response.data.refresh);
       localStorage.setItem('username', 'demo_user');
 
-      // Trigger storage event for state synchronization
       window.dispatchEvent(new Event('storage'));
-
-      // Navigate to the home page
       navigate('/');
     } catch (error) {
       setError('Failed to log in with the demo account. Please try again.');
+    } finally {
+      setLoading(false); // Hide loader
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true); // Show loader
     try {
-      // Register the user
       await apiClient.post('auth/register/', {
         username,
         email,
         password,
       });
 
-      // Log the user in immediately
       const loginResponse = await apiClient.post('auth/token/', {
         username,
         password,
       });
 
-      // Store tokens in localStorage
       localStorage.setItem('accessToken', loginResponse.data.access);
       localStorage.setItem('refreshToken', loginResponse.data.refresh);
       localStorage.setItem('username', username);
 
-      // Trigger storage event for state synchronization
       window.dispatchEvent(new Event('storage'));
-
-      // Navigate to home page
       navigate('/');
     } catch (error) {
-      setError('Failed to register or log in. Please try again.');
+      if (error.response && error.response.data) {
+        const errorData = error.response.data;
+        // Extract specific error messages from the backend response
+        if (errorData.username) {
+          setError(`Username: ${errorData.username[0]}`);
+        } else if (errorData.email) {
+          setError(`Email: ${errorData.email[0]}`);
+        } else if (errorData.non_field_errors) {
+          setError(errorData.non_field_errors[0]);
+        } else {
+          setError('Failed to register. Please check your input.');
+        }
+      } else {
+        setError('An unexpected error occurred. Please try again.');
+      }
+    } finally {
+      setLoading(false); // Hide loader
     }
   };
 
   return (
     <div className="auth-container">
       <h2>Register</h2>
-      <form className="auth-form" onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button type="submit">Register</button>
-      </form>
-      {error && <p className="error-message">{error}</p>}
-      <button className="demo-button" onClick={handleDemoLogin}>
-        Use Demo Account
-      </button>
-      <div className="auth-link">
-        <p>Already have an account? <Link to="/login">Login</Link></p>
-      </div>
+      {loading ? (
+        <div className="loader-container">
+          <div className="loader"></div>
+          <p>Loading...</p>
+        </div>
+      ) : (
+        <>
+          <form className="auth-form" onSubmit={handleSubmit}>
+            <input
+              type="text"
+              placeholder="Username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <button type="submit">Register</button>
+          </form>
+          {error && <p className="error-message">{error}</p>}
+          <button className="demo-button" onClick={handleDemoLogin}>
+            Use Demo Account
+          </button>
+          <div className="auth-link">
+            <p>Already have an account? <Link to="/login">Login</Link></p>
+          </div>
+        </>
+      )}
     </div>
   );
 }

@@ -8,7 +8,8 @@ function Layout({ children, isAuthenticated, username, handleLogout }) {
   const [showSearchDropdown, setShowSearchDropdown] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false); // For search
+  const [demoLoading, setDemoLoading] = useState(false); // For demo login
   const [mediaType, setMediaType] = useState('anime');
   const navigate = useNavigate();
   const searchContainerRef = useRef(null);
@@ -36,6 +37,7 @@ function Layout({ children, isAuthenticated, username, handleLogout }) {
   }, [showUserDropdown]);
 
   const handleDemoLogin = async () => {
+    setDemoLoading(true); // Start demo loading
     try {
       const response = await apiClient.post('auth/token/', {
         username: 'demo_user',
@@ -50,6 +52,8 @@ function Layout({ children, isAuthenticated, username, handleLogout }) {
       navigate('/');
     } catch (error) {
       alert('Failed to log in as the demo user. Please try again later.');
+    } finally {
+      setDemoLoading(false); // Stop demo loading
     }
   };
 
@@ -100,7 +104,10 @@ function Layout({ children, isAuthenticated, username, handleLogout }) {
             </>
           ) : (
             <div className="user-menu" ref={userMenuRef}>
-              <span onClick={() => setShowUserDropdown((prev) => !prev)} className="username">
+              <span
+                onClick={() => setShowUserDropdown((prev) => !prev)}
+                className="username"
+              >
                 {username} ▼
               </span>
               {showUserDropdown && (
@@ -114,7 +121,11 @@ function Layout({ children, isAuthenticated, username, handleLogout }) {
 
         <div className="search-container" ref={searchContainerRef}>
           <div className="search-bar">
-            <select className="media-type-dropdown" value={mediaType} onChange={handleMediaTypeChange}>
+            <select
+              className="media-type-dropdown"
+              value={mediaType}
+              onChange={handleMediaTypeChange}
+            >
               <option value="anime">Anime</option>
               <option value="video_game">Video Game</option>
               <option value="movie">Movie</option>
@@ -155,18 +166,27 @@ function Layout({ children, isAuthenticated, username, handleLogout }) {
       <main className="content">
         {!isAuthenticated && (
           <div className="login-prompt">
-            <p>
-              <strong>Log in to start rating and tracking the media you enjoy!</strong>
-              <br />
-              <Link to="/login" className="login-link">Login</Link>, <Link to="/register" className="login-link">Sign Up</Link>, or{' '}
-              <button className="login-link" onClick={handleDemoLogin}>
-                Use Demo Account
-              </button>.
-            </p>
-            <p className="demo-description">
-              The demo account allows you to explore the app's features with pre-filled data, showcasing how the app looks after tracking and rating a variety of media. 
-              If you'd like to experience the app as a new user, feel free to create your own account with a fake email address for testing purposes.
-            </p>
+            {demoLoading ? (
+              <div className="loading-container">
+                <div className="loading-spinner"></div>
+                <p>Logging in as Demo User...</p>
+              </div>
+            ) : (
+              <>
+                <p>
+                  <strong>Log in to start rating and tracking the media you enjoy!</strong>
+                  <br />
+                  <Link to="/login" className="login-link">Login</Link>, <Link to="/register" className="login-link">Sign Up</Link>, or{' '}
+                  <button className="login-link" onClick={handleDemoLogin}>
+                    Use Demo Account
+                  </button>.
+                </p>
+                <p className="demo-description">
+                  The demo account allows you to explore the app's features with pre-filled data, showcasing how the app looks after tracking and rating a variety of media.
+                  If you'd like to experience the app as a new user, feel free to create your own account with a fake email address for testing purposes.
+                </p>
+              </>
+            )}
           </div>
         )}
         {children}
