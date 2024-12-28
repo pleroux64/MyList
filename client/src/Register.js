@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import apiClient from './axiosInstance'; 
-import './auth.css';  // Import the CSS file for styling
+import { useNavigate, Link } from 'react-router-dom';
+import apiClient from './axiosInstance';
+import './auth.css'; // Import the CSS file for styling
 
 function Register() {
   const [username, setUsername] = useState('');
@@ -9,6 +9,29 @@ function Register() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+
+  const handleDemoLogin = async () => {
+    try {
+      // Log in as demo user
+      const response = await apiClient.post('auth/token/', {
+        username: 'demo_user',
+        password: 'Demo@123',
+      });
+
+      // Store tokens in localStorage
+      localStorage.setItem('accessToken', response.data.access);
+      localStorage.setItem('refreshToken', response.data.refresh);
+      localStorage.setItem('username', 'demo_user');
+
+      // Trigger storage event for state synchronization
+      window.dispatchEvent(new Event('storage'));
+
+      // Navigate to the home page
+      navigate('/');
+    } catch (error) {
+      setError('Failed to log in with the demo account. Please try again.');
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -66,6 +89,12 @@ function Register() {
         <button type="submit">Register</button>
       </form>
       {error && <p className="error-message">{error}</p>}
+      <button className="demo-button" onClick={handleDemoLogin}>
+        Use Demo Account
+      </button>
+      <div className="auth-link">
+        <p>Already have an account? <Link to="/login">Login</Link></p>
+      </div>
     </div>
   );
 }

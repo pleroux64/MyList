@@ -9,10 +9,26 @@ function Login() {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleDemoLogin = () => {
-    // Populate form with demo credentials
-    setUsername('demo_user');
-    setPassword('Demo@123');
+  const handleDemoLogin = async () => {
+    try {
+      const response = await apiClient.post('auth/token/', {
+        username: 'demo_user',
+        password: 'Demo@123',
+      });
+
+      // Store tokens and username in localStorage
+      localStorage.setItem('accessToken', response.data.access);
+      localStorage.setItem('refreshToken', response.data.refresh);
+      localStorage.setItem('username', 'demo_user');
+
+      // Trigger storage event for state synchronization
+      window.dispatchEvent(new Event('storage'));
+
+      // Navigate to the home page
+      navigate('/');
+    } catch (error) {
+      setError('Failed to log in with the demo account. Please try again.');
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -23,12 +39,15 @@ function Login() {
         password,
       });
 
+      // Store tokens and username in localStorage
       localStorage.setItem('accessToken', response.data.access);
       localStorage.setItem('refreshToken', response.data.refresh);
       localStorage.setItem('username', username);
 
+      // Trigger storage event for state synchronization
       window.dispatchEvent(new Event('storage'));
 
+      // Navigate to the home page
       navigate('/');
     } catch (error) {
       setError('Invalid username or password. Please try again.');
