@@ -4,7 +4,7 @@ import apiClient from './axiosInstance';
 import './media-listing.css'; // Import your CSS file
 
 function TopMediaListsPage() {
-    const [mediaType, setMediaType] = useState('movie'); // Default to 'movie' initially
+    const [mediaType, setMediaType] = useState('movie');
     const [topMediaList, setTopMediaList] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -29,9 +29,6 @@ function TopMediaListsPage() {
         }
     };
 
-    if (loading) return <p>Loading top media list...</p>;
-    if (error) return <p>{error}</p>;
-
     return (
         <div className="container">
             <h2>Top {mediaType.charAt(0).toUpperCase() + mediaType.slice(1)}s</h2>
@@ -44,7 +41,15 @@ function TopMediaListsPage() {
                     <option value="tv_show">TV Shows</option>
                 </select>
             </div>
-            {topMediaList.length > 0 ? (
+
+            {loading ? (
+                <div className="loader-container">
+                    <div className="loader"></div>
+                    <p>Loading top media list...</p>
+                </div>
+            ) : error ? (
+                <p className="error-message">{error}</p>
+            ) : topMediaList.length > 0 ? (
                 <ul className="media-list">
                     {topMediaList.map((media, index) => (
                         <li
@@ -52,7 +57,6 @@ function TopMediaListsPage() {
                             className="media-item"
                             onClick={() => navigate(`/media/${media.id}`)}
                         >
-                            {/* Display the ranking number with the new class */}
                             <div className="top-list-number">{index + 1}</div>
                             <div className="image-container">
                                 <img

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import apiClient from './axiosInstance';
-import './media-listing.css';  // Import the unified CSS
+import './media-listing.css'; // Import the unified CSS
 
 function MediaDetailsPage() {
     const { mediaId } = useParams(); // Extract the media ID from the URL
@@ -17,7 +17,7 @@ function MediaDetailsPage() {
     useEffect(() => {
         fetchMediaDetails();
         if (isAuthenticated) {
-            fetchUserInteraction();  // Fetch interaction only if the user is logged in
+            fetchUserInteraction(); // Fetch interaction only if the user is logged in
         }
     }, [mediaId, isAuthenticated]);
 
@@ -45,8 +45,8 @@ function MediaDetailsPage() {
             });
 
             if (response.data) {
-                setStatus(response.data.status);  // Pre-fill the status
-                setRating(response.data.rating.toString());  // Pre-fill the rating as a string for the select input
+                setStatus(response.data.status); // Pre-fill the status
+                setRating(response.data.rating.toString()); // Pre-fill the rating as a string for the select input
             }
         } catch (error) {
             console.error('Error fetching user interaction:', error);
@@ -63,7 +63,7 @@ function MediaDetailsPage() {
 
         try {
             await apiClient.post(
-                'media/interactions/', 
+                'media/interactions/',
                 payload,
                 {
                     headers: {
@@ -95,7 +95,12 @@ function MediaDetailsPage() {
     };
 
     if (loading) {
-        return <p>Loading media details...</p>;
+        return (
+            <div className="loader-container">
+                <div className="loading-spinner"></div>
+                <p>Loading media details...</p>
+            </div>
+        );
     }
 
     if (error) {
