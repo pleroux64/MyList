@@ -8,12 +8,13 @@ function Layout({ children, isAuthenticated, username, handleLogout }) {
   const [showSearchDropdown, setShowSearchDropdown] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
-  const [loading, setLoading] = useState(false); // For search
-  const [demoLoading, setDemoLoading] = useState(false); // For demo login
+  const [loading, setLoading] = useState(false);
+  const [demoLoading, setDemoLoading] = useState(false);
   const [mediaType, setMediaType] = useState('anime');
   const navigate = useNavigate();
   const searchContainerRef = useRef(null);
   const userMenuRef = useRef(null);
+  const [debounceTimer, setDebounceTimer] = useState(null);
 
   useEffect(() => {
     setShowUserDropdown(false);
@@ -37,7 +38,7 @@ function Layout({ children, isAuthenticated, username, handleLogout }) {
   }, [showUserDropdown]);
 
   const handleDemoLogin = async () => {
-    setDemoLoading(true); // Start demo loading
+    setDemoLoading(true);
     try {
       const response = await apiClient.post('auth/token/', {
         username: 'demo_user',
@@ -53,12 +54,12 @@ function Layout({ children, isAuthenticated, username, handleLogout }) {
     } catch (error) {
       alert('Failed to log in as the demo user. Please try again later.');
     } finally {
-      setDemoLoading(false); // Stop demo loading
+      setDemoLoading(false);
     }
   };
 
-  const handleSearch = async () => {
-    if (searchTerm.trim() === '') {
+  const fetchSearchResults = async (query) => {
+    if (query.trim() === '') {
       setSearchResults([]);
       setShowSearchDropdown(false);
       return;
@@ -66,7 +67,9 @@ function Layout({ children, isAuthenticated, username, handleLogout }) {
 
     setLoading(true);
     try {
-      const response = await apiClient.get(`media/search/?q=${searchTerm}&media_type=${mediaType}`);
+      const response = await apiClient.get(`media/search/`, {
+        params: { q: query, media_type: mediaType },
+      });
       setSearchResults(response.data);
       setShowSearchDropdown(true);
     } catch (error) {
@@ -77,11 +80,23 @@ function Layout({ children, isAuthenticated, username, handleLogout }) {
   };
 
   const handleSearchInputChange = (e) => {
-    setSearchTerm(e.target.value);
+    const query = e.target.value;
+    setSearchTerm(query);
+
+    if (debounceTimer) clearTimeout(debounceTimer);
+
+    setDebounceTimer(
+      setTimeout(() => {
+        fetchSearchResults(query);
+      }, 300)
+    );
   };
 
   const handleMediaTypeChange = (e) => {
     setMediaType(e.target.value);
+    if (searchTerm.trim() !== '') {
+      fetchSearchResults(searchTerm);
+    }
   };
 
   const handleLogoutClick = () => {
@@ -138,9 +153,6 @@ function Layout({ children, isAuthenticated, username, handleLogout }) {
               onChange={handleSearchInputChange}
               placeholder="Search for media..."
             />
-            <button className="search-button" onClick={handleSearch}>
-              Search
-            </button>
           </div>
           {showSearchDropdown && searchResults.length > 0 && (
             <ul className="search-dropdown">
@@ -154,7 +166,7 @@ function Layout({ children, isAuthenticated, username, handleLogout }) {
                       alt={media.title}
                       style={{ width: '30px', height: '45px', marginRight: '10px' }}
                     />
-                    <span>{media.title} - {media.media_type}</span>
+                    <span>{media.title}</span>
                   </li>
                 ))
               )}
@@ -193,7 +205,28 @@ function Layout({ children, isAuthenticated, username, handleLogout }) {
       </main>
 
       <footer className="footer">
-        <p>© 2024 Your Media Tracker. All rights reserved.</p>
+        <p>© 2024 MyList. All rights reserved.</p>
+        <p>
+          This product uses data from:
+        </p>
+        <ul>
+          <li>
+            <a href="https://www.themoviedb.org/" target="_blank" rel="noopener noreferrer">
+              <img src="/tmdb-logo.svg" alt="TMDB Logo" className="tmdb-logo" />
+            </a>{' '}
+            TMDB and the TMDB APIs but is not endorsed or certified by TMDB.
+          </li>
+          <li>
+            <a href="https://rawg.io/" target="_blank" rel="noopener noreferrer">
+              RAWG Video Game Database
+            </a>
+          </li>
+          <li>
+            <a href="https://jikan.moe/" target="_blank" rel="noopener noreferrer">
+              Jikan Anime API
+            </a>
+          </li>
+        </ul>
       </footer>
     </div>
   );

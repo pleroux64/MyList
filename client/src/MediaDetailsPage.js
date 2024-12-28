@@ -1,27 +1,26 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import apiClient from './axiosInstance';
 import './media-listing.css'; // Import the unified CSS
 
 function MediaDetailsPage() {
-    const { mediaId } = useParams(); // Extract the media ID from the URL
+    const { mediaId } = useParams();
     const [mediaDetails, setMediaDetails] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [status, setStatus] = useState('');
     const [rating, setRating] = useState('');
-    const [interactionError, setInteractionError] = useState(null); // Error state for interaction form
-
-    const isAuthenticated = !!localStorage.getItem('accessToken'); // Check if user is authenticated
+    const [feedbackMessage, setFeedbackMessage] = useState(null);
+    const isAuthenticated = !!localStorage.getItem('accessToken');
 
     useEffect(() => {
         fetchMediaDetails();
         if (isAuthenticated) {
-            fetchUserInteraction(); // Fetch interaction only if the user is logged in
+            fetchUserInteraction();
         }
     }, [mediaId, isAuthenticated]);
 
-    // Fetch the media details
+    // Fetch media details
     const fetchMediaDetails = async () => {
         try {
             const response = await apiClient.get(`media/detail/${mediaId}/`);
@@ -34,22 +33,25 @@ function MediaDetailsPage() {
         }
     };
 
-    // Fetch the user's interaction with the media
+    // Fetch user's interaction with the media (to pre-fill the form)
     const fetchUserInteraction = async () => {
         try {
             const token = localStorage.getItem('accessToken');
             const response = await apiClient.get(`user-media-interaction/${mediaId}/`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
+                headers: { Authorization: `Bearer ${token}` },
             });
 
             if (response.data) {
-                setStatus(response.data.status); // Pre-fill the status
-                setRating(response.data.rating.toString()); // Pre-fill the rating as a string for the select input
+                // Pre-populate the status and rating fields if interaction exists
+                setStatus(response.data.status || '');
+                setRating(response.data.rating?.toString() || '');
             }
         } catch (error) {
-            console.error('Error fetching user interaction:', error);
+            if (error.response?.status === 404) {
+                console.log('No previous interaction found for this media.');
+            } else {
+                console.error('Error fetching user interaction:', error);
+            }
         }
     };
 
@@ -57,25 +59,26 @@ function MediaDetailsPage() {
         const token = localStorage.getItem('accessToken');
         const payload = {
             media: mediaId,
-            status: status,
-            rating: parseFloat(rating), // Ensure rating is a number
+            status,
+            rating: parseFloat(rating),
         };
 
         try {
-            await apiClient.post(
-                'media/interactions/',
-                payload,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        'Content-Type': 'application/json',
-                    },
-                }
-            );
-            alert('Interaction saved successfully!');
+            const response = await apiClient.post('media/interactions/', payload, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (response.status === 201) {
+                setFeedbackMessage({ type: 'success', text: 'Interaction added successfully!' });
+            } else if (response.status === 200) {
+                setFeedbackMessage({ type: 'success', text: 'Interaction updated successfully!' });
+            }
         } catch (error) {
             console.error('Error saving interaction:', error);
-            setInteractionError('Failed to save interaction. Please try again.');
+            setFeedbackMessage({ type: 'error', text: 'Failed to save interaction. Please try again.' });
         }
     };
 
@@ -104,7 +107,7 @@ function MediaDetailsPage() {
     }
 
     if (error) {
-        return <p>{error}</p>;
+        return <p className="error-message">{error}</p>;
     }
 
     return (
@@ -120,26 +123,20 @@ function MediaDetailsPage() {
                             />
                         </div>
                         <div className="media-details-info">
-                            <div className="media-info-group">
-                                <p><strong>Type:</strong> {formatMediaType(mediaDetails.media_type)}</p>
-                                <p>
-                                    <strong>Average Rating:</strong> 
-                                    {mediaDetails.rating ? `${mediaDetails.rating}/10` : 'Not Yet Rated'}
-                                </p>
-                            </div>
+                            <p><strong>Type:</strong> {formatMediaType(mediaDetails.media_type)}</p>
+                            <p>
+                                <strong>Average Rating:</strong>{' '}
+                                {mediaDetails.rating ? `${mediaDetails.rating}/10` : 'Not Yet Rated'}
+                            </p>
                         </div>
                     </div>
-
-                    {/* Display description below the image and details */}
                     {mediaDetails.description && (
                         <div className="media-description">
                             <h3>Description:</h3>
                             <p>{mediaDetails.description}</p>
                         </div>
                     )}
-
-                    {/* Only show interaction form if the user is logged in */}
-                    {isAuthenticated && (
+                    {isAuthenticated ? (
                         <div className="interaction-form">
                             <h3>Rate and set status for {mediaDetails.title}</h3>
                             <label>
@@ -150,7 +147,6 @@ function MediaDetailsPage() {
                                     className="form-control"
                                 >
                                     <option value="">Select a status</option>
-                                    {/* Show different status options based on media type */}
                                     {mediaDetails.media_type === 'video_game' ? (
                                         <>
                                             <option value="played">Played</option>
@@ -186,8 +182,20 @@ function MediaDetailsPage() {
                             <button className="submit-button" onClick={handleInteractionSubmit}>
                                 Save Interaction
                             </button>
-                            {interactionError && <p className="error-text">{interactionError}</p>}
+                            {feedbackMessage && (
+                                <p
+                                    className={`feedback-message ${
+                                        feedbackMessage.type === 'success' ? 'success' : 'error'
+                                    }`}
+                                >
+                                    {feedbackMessage.text}
+                                </p>
+                            )}
                         </div>
+                    ) : (
+                        <p className="login-prompt">
+                            Please <Link to="/login">log in</Link> to interact with this media.
+                        </p>
                     )}
                 </div>
             ) : (
