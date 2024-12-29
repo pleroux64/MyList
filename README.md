@@ -25,7 +25,7 @@ If you'd like to run the project locally, follow these steps:
 ### Steps
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/rank.git
+   git clone https://github.com/pleroux64/MyList.git
    ```
 2. Navigate to the project directory:
    ```bash
