@@ -1,7 +1,7 @@
-# Rank Project
+# MyList Project
 
 ## Overview
-Rank is a media recommendation and tracking platform that allows users to:
+MyList is a media recommendation and tracking platform that allows users to:
 - Search for and track movies, TV shows, anime, and video games.
 - Rate and interact with media to receive personalized recommendations.
 - Explore top-rated media lists based on global ratings.
@@ -11,7 +11,7 @@ Rank is a media recommendation and tracking platform that allows users to:
 - **server/**: The Django backend providing APIs for media recommendations, search, and user management.
 
 ## Live Demo
-Access the live application here: [Rank Live Link](https://your-live-link.com)
+Access the live application here: [MyList Live Link](https://mylist-gray.vercel.app/)
 
 ## Local Setup
 If you'd like to run the project locally, follow these steps:
