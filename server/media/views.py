@@ -10,6 +10,7 @@ import requests
 import logging
 import pandas as pd
 from django.shortcuts import render
+from django.shortcuts import get_object_or_404
 from surprise import Dataset, Reader, SVD
 from surprise.model_selection import train_test_split
 import joblib
@@ -350,18 +351,24 @@ def get_recommendations(request):
     return Response(top_recommendations, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])  # Uncomment this if you want to enforce authentication
-def get_user_media_interaction(request, media_id):
-    """
-    Get the user's interaction (status, rating) with a specific media item.
-    """
-    user = request.user
-    try:
-        # Query for the interaction by user and media_id
-        interaction = UserMediaInteraction.objects.get(user=user, media__id=media_id)
-        # Serialize the interaction data
-        serializer = UserMediaInteractionSerializer(interaction)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-    except UserMediaInteraction.DoesNotExist:
-        # Return an error message if no interaction is found
-        return Response({"detail": "No interaction found for this media."}, status=status.HTTP_404_NOT_FOUND)
+@permission_classes([IsAuthenticated])
+def has_user_interacted(request, media_id):
+    user = request.user  # Get the logged-in user
+    media = get_object_or_404(Media, id=media_id)  # Ensure the media exists
+
+    # Check if the user has interacted with this media
+    interaction = UserMediaInteraction.objects.filter(user=user, media=media).first()
+
+    if interaction:
+        # Return the interaction details if found
+        return Response({
+            "interacted": True,
+            "status": interaction.status,
+            "rating": interaction.rating,
+        })
+    else:
+        # Return a response indicating no interaction
+        return Response({"interacted": False})
+
+
+

@@ -10,6 +10,14 @@ function TopMediaListsPage() {
     const [error, setError] = useState(null);
     const navigate = useNavigate();
 
+    // Map media types to readable labels
+    const mediaTypeLabels = {
+        movie: 'Movies',
+        anime: 'Anime',
+        video_game: 'Video Games',
+        tv_show: 'TV Shows',
+    };
+
     useEffect(() => {
         fetchTopMediaListByType(mediaType);
     }, [mediaType]);
@@ -31,14 +39,15 @@ function TopMediaListsPage() {
 
     return (
         <div className="container">
-            <h2>Top {mediaType.charAt(0).toUpperCase() + mediaType.slice(1)}s</h2>
+            <h2>Top {mediaTypeLabels[mediaType]}</h2>
             <div className="form-container">
                 <label>Select Media Type: </label>
                 <select value={mediaType} onChange={(e) => setMediaType(e.target.value)}>
-                    <option value="movie">Movies</option>
-                    <option value="anime">Anime</option>
-                    <option value="video_game">Video Games</option>
-                    <option value="tv_show">TV Shows</option>
+                    {Object.entries(mediaTypeLabels).map(([type, label]) => (
+                        <option key={type} value={type}>
+                            {label}
+                        </option>
+                    ))}
                 </select>
             </div>
 
