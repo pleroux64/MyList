@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Register from './Register';
-import Login from './Login';
-import Home from './Home';
-import MediaList from './MediaList';
-import TopMediaListsPage from './TopMediaListsPage';
-import MediaDetailsPage from './MediaDetailsPage'; // Import the Media Details page
-import Layout from './Layout';
+import SignUpPage from './pages/SignUpPage';
+import LoginPage from './pages/LoginPage';
+import HomePage from './pages/HomePage';
+import MediaListPage from './pages/MediaListPage';
+import TopMediaListsPage from './pages/TopMediaListsPage';
+import MediaDetailsPage from './pages/MediaDetailsPage'; // Import the Media Details page
+import Layout from './components/Layout';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('accessToken'));
@@ -47,11 +47,11 @@ function App() {
         <Routes>
           <Route
             path="/"
-            element={<Home isAuthenticated={isAuthenticated} handleLogin={handleLogin} handleLogout={handleLogout} />}
+            element={<HomePage isAuthenticated={isAuthenticated} handleLogin={handleLogin} handleLogout={handleLogout} />}
           />
-          <Route path="/login" element={<Login handleLogin={handleLogin} />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/media-list" element={<MediaList />} />
+          <Route path="/login" element={<LoginPage handleLogin={handleLogin} />} />
+          <Route path="/register" element={<SignUpPage />} />
+          <Route path="/media-list" element={<MediaListPage />} />
           <Route path="/top-media-lists" element={<TopMediaListsPage />} />
           <Route path="/media/:mediaId" element={<MediaDetailsPage />} /> {/* New route for media details */}
         </Routes>

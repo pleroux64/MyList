@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import apiClient from './axiosInstance';
-import './media-listing.css'; // Import the unified CSS
+import apiClient from '../utils/axiosInstance';
+import '../styles/media-listing.css'; // Import the unified CSS
 
 function MediaDetailsPage() {
     const { mediaId } = useParams();

@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import apiClient from './axiosInstance';
-import './auth.css'; // Import the CSS file for styling
+import apiClient from '../utils/axiosInstance';
+import '../styles/auth.css'; // Import the CSS file for styling
 
-function Register() {
+function SignUpPage() {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -118,4 +118,4 @@ function Register() {
   );
 }
 
-export default Register;
+export default SignUpPage;

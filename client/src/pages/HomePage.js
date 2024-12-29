@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import apiClient from './axiosInstance';
-import './media-listing.css'; // Keep the unified CSS
+import apiClient from '../utils/axiosInstance';
+import '../styles/media-listing.css'; // Keep the unified CSS
 
-function Home({ isAuthenticated, handleLogout }) {
+function HomePage({ isAuthenticated, handleLogout }) {
     const [recommendations, setRecommendations] = useState({
         animeSpecific: { data: [], loading: true },
         animeGeneral: { data: [], loading: true },
@@ -166,4 +166,4 @@ function Home({ isAuthenticated, handleLogout }) {
     );
 }
 
-export default Home;
+export default HomePage;

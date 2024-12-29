@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import apiClient from './axiosInstance';
-import './Layout.css';
+import apiClient from '../utils/axiosInstance';
+import '../styles/Layout.css';
 
 function Layout({ children, isAuthenticated, username, handleLogout }) {
   const [showUserDropdown, setShowUserDropdown] = useState(false);
