@@ -24,15 +24,15 @@ If you'd like to run the project locally, follow these steps:
 
 ### Steps
 1. Clone the repository:
-   \`\`\`bash
+   ```bash
    git clone https://github.com/yourusername/rank.git
-   \`\`\`
+   ```
 2. Navigate to the project directory:
-   \`\`\`bash
+   ```bash
    cd rank
-   \`\`\`
-3. **Backend Setup (Server)**: For detailed backend setup instructions, check the \`server/README.md\`.
-4. **Frontend Setup (Client)**: For detailed frontend setup instructions, check the \`client/README.md\`.
+   ```
+3. **Backend Setup (Server)**: For detailed backend setup instructions, check the `server/README.md`.
+4. **Frontend Setup (Client)**: For detailed frontend setup instructions, check the `client/README.md`.
 
 ## Features
 - **Personalized Recommendations**: Built using collaborative filtering with SVD.
