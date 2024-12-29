@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import apiClient from './axiosInstance';
-import './media-listing.css'; // Import your CSS file
+import apiClient from '../utils/axiosInstance';
+import '../styles/media-listing.css'; // Import your CSS file
 
 function TopMediaListsPage() {
     const [mediaType, setMediaType] = useState('movie');

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import apiClient from './axiosInstance';
-import './media-listing.css'; // Import the unified CSS
+import apiClient from '../utils/axiosInstance';
+import '../styles/media-listing.css'; // Import the unified CSS
 
-function MediaList() {
+function MediaListPage() {
     const [mediaType, setMediaType] = useState('movie');
     const [mediaList, setMediaList] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -92,4 +92,4 @@ function MediaList() {
     );
 }
 
-export default MediaList;
+export default MediaListPage;
