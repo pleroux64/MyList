@@ -16,30 +16,30 @@ To run the backend locally:
 
 ### Steps
 1. Navigate to the `server` folder:
-   \`\`\`bash
+   ```bash
    cd server
-   \`\`\`
+   ```
 2. Create a virtual environment and activate it:
-   \`\`\`bash
+   ```bash
    python -m venv venv
    source venv/bin/activate  # On Windows: venv\Scripts\activate
-   \`\`\`
+   ```
 3. Install dependencies:
-   \`\`\`bash
+   ```bash
    pip install -r requirements.txt
-   \`\`\`
+   ```
 4. Set up the database:
    - Ensure PostgreSQL is running.
-   - Create a database (e.g., \`rankdb\`).
-   - Update the database settings in \`rank/settings.py\`.
+   - Create a database (e.g., `rankdb`).
+   - Update the database settings in `rank/settings.py`.
    - Run migrations:
-     \`\`\`bash
+     ```bash
      python manage.py migrate
-     \`\`\`
+     ```
 5. Start the development server:
-   \`\`\`bash
+   ```bash
    python manage.py runserver
-   \`\`\`
+   ```
 
 ## Features
 - Secure authentication with JWT tokens.
@@ -55,5 +55,3 @@ To run the backend locally:
 - PostgreSQL
 - Surprise Library (Collaborative Filtering)
 
-## Live Demo
-Access the live backend here: [Rank Backend Link](https://your-live-link.com)
