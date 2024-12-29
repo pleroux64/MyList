@@ -37,12 +37,11 @@ function MediaDetailsPage() {
     const fetchUserInteraction = async () => {
         try {
             const token = localStorage.getItem('accessToken');
-            const response = await apiClient.get(`user-media-interaction/${mediaId}/`, {
+            const response = await apiClient.get(`media/has-interacted/${mediaId}/`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
 
-            if (response.data) {
-                // Pre-populate the status and rating fields if interaction exists
+            if (response.data.interacted) {
                 setStatus(response.data.status || '');
                 setRating(response.data.rating?.toString() || '');
             }
