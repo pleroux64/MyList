@@ -35,7 +35,7 @@ function Layout({ children, isAuthenticated, username, handleLogout }) {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [showUserDropdown]);
+  }, []);
 
   const handleDemoLogin = async () => {
     setDemoLoading(true);
@@ -154,11 +154,14 @@ function Layout({ children, isAuthenticated, username, handleLogout }) {
               placeholder="Search for media..."
             />
           </div>
-          {showSearchDropdown && searchResults.length > 0 && (
+          {showSearchDropdown && (
             <ul className="search-dropdown">
               {loading ? (
-                <li>Loading...</li>
-              ) : (
+                <li className="loading-spinner-container">
+                  <div className="loading-spinner"></div>
+                  <p>Loading results...</p>
+                </li>
+              ) : searchResults.length > 0 ? (
                 searchResults.map((media) => (
                   <li key={media.id} onClick={() => navigate(`/media/${media.id}`)}>
                     <img
@@ -169,6 +172,8 @@ function Layout({ children, isAuthenticated, username, handleLogout }) {
                     <span>{media.title}</span>
                   </li>
                 ))
+              ) : (
+                <li>No results found.</li>
               )}
             </ul>
           )}
